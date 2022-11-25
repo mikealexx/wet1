@@ -1,5 +1,7 @@
 #include "AVLTree.h"
 
+//DON'T FORGET TO ADD D'CTOR
+
 AVLTree::AVLTree(): root(nullptr) {}
 
 int AVLTree::height(TreeNode* node) const {

@@ -17,7 +17,7 @@ class AVLTree {
     public:
         TreeNode* root;
         AVLTree();
-        ~AVLTree() = default;
+        ~AVLTree() = default; //DON'T FORGET TO CHANGE THAT - LEAKS
         TreeNode* insert(TreeNode* root, int val);
 };
 
