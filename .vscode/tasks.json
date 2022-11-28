@@ -8,8 +8,6 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
-                "AVLTree.cpp",
-                "TreeNode.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

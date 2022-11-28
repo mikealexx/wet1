@@ -3,7 +3,8 @@
 
 using namespace std;
 
-void print2DUtil(TreeNode* root, int space)
+template<class T>
+void print2DUtil(TreeNode<T>* root, int space)
 {
     // Base case
     if (root == NULL)
@@ -20,14 +21,14 @@ void print2DUtil(TreeNode* root, int space)
     cout << endl;
     for (int i = 10; i < space; i++)
         cout << " ";
-    cout << root->val << "\n";
+    cout << root->key << "\n";
  
     // Process left child
     print2DUtil(root->left, space);
 }
  
 // Wrapper over print2DUtil()
-void print2D(TreeNode* root)
+void print2D(TreeNode<int>* root)
 {
     // Pass initial space count as 0
     print2DUtil(root, 0);
@@ -35,7 +36,7 @@ void print2D(TreeNode* root)
 
 
 int main() {
-    AVLTree b;
+    AVLTree<int, int> b;
     int c,x;
 
     do{
@@ -50,24 +51,33 @@ int main() {
         switch (c)
         {
         case 1:
+        {
             print2D(b.root);
             // to print the tree in level order
             break;
+        }
                   
         case 2:
+        {
             cout<<"\nEnter no. ";
             cin>>x;
-            b.root = b.insert(b.root,x);
+            int y = 0;
+            b.root = b.insert(b.root ,&y, x);
             break;
+        }
         
         case 3:
+        {
             cout<<"\nWhat to delete? ";
             cin>>x;
-            //b.deleteNode(b.root,x);
+            b.root = b.remove(b.root, x);
             break;
+        }
             
         case 0:
+        {
             break;
+        }
         }
 
      } while(c!=0);
