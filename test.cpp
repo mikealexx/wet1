@@ -3,8 +3,8 @@
 
 using namespace std;
 
-template<class T>
-void print2DUtil(TreeNode<T>* root, int space)
+template<class T, class S>
+void print2DUtil(TreeNode<T, S>* root, int space)
 {
     // Base case
     if (root == NULL)
@@ -28,7 +28,7 @@ void print2DUtil(TreeNode<T>* root, int space)
 }
  
 // Wrapper over print2DUtil()
-void print2D(TreeNode<int>* root)
+void print2D(TreeNode<int, int>* root)
 {
     // Pass initial space count as 0
     print2DUtil(root, 0);
@@ -38,9 +38,14 @@ void print2D(TreeNode<int>* root)
 int main() {
     AVLTree<int, int> b;
     int c,x;
+    int a = 1;
+    int t = 1;
+    shared_ptr<int> one(&a);
+    shared_ptr<int> two(&t);
+    two = one;
 
     do{
-        cout<<"\n1.Display levelorder on newline";
+        cout<<"\n1.Display Tree";
         cout<<"\n2.Insert";
         cout<<"\n3.Delete\n";
         cout<<"\n0.Exit\n";
@@ -62,7 +67,7 @@ int main() {
             cout<<"\nEnter no. ";
             cin>>x;
             int y = 0;
-            b.root = b.insert(b.root ,&y, x);
+            b.root = b.insert(b.root, &y, x);
             break;
         }
         

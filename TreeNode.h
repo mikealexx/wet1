@@ -5,7 +5,7 @@
 #include "Player.h"
 using namespace std;
 
-template <class T>
+template <class T, class S>
 class TreeNode {
 public:
     shared_ptr<T> data;
@@ -15,15 +15,15 @@ public:
     int height;
 
     TreeNode() = delete;
-    TreeNode(const T& key, shared_ptr<T> data);
+    TreeNode(T*data, const S& key);
     TreeNode(const TreeNode& other) = default;
     ~TreeNode() = default;
     TreeNode& operator=(const TreeNode& other) = default;
 
 };
 
-template <class T>
-TreeNode<T>::TreeNode(const T& key, shared_ptr<T> data):
+template <class T, class S>
+TreeNode<T, S>::TreeNode(T*data, const S& key):
     data(data),
     key(key),
     left(nullptr),
