@@ -46,6 +46,9 @@ class AVLTree {
         }
 
         static TreeNode<T, S>* balanceTree(TreeNode<T, S>* root) {
+            if(root == nullptr) {
+                return nullptr;
+            }
             root->height = AVLTree::height(root);
             int balance = AVLTree::balanceFactor(root);
             if(balance == 2) {
@@ -83,19 +86,22 @@ class AVLTree {
 
             else{
 
-                if (root->left == nullptr and root->right == nullptr)
+                if (root->left == nullptr && root->right == nullptr)
+                    //root = nullptr;
                     return nullptr;
                 
-                TreeNode<T, S>* temp;
+                
                 if (root->left == nullptr) {
-                    return root->right;
+                    root = root->right;
+                    return root;
                 }
 
                 if (root->right == nullptr) {
-                    return root->left;
+                    root = root->left;
+                    return root;
                 }
 
-                temp = minNode(root->right);
+                TreeNode<T, S>* temp = minNode(root->right);
                 root->key = temp->key;
                 root->data = temp->data;
                 //root->data = shared_ptr<T>(temp->data);
@@ -279,32 +285,9 @@ TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
 
 template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
-    deleteNode(root, key);
+    return balanceTree(deleteNode(root, key));
 
-    return balanceTree(root);
-
-    int balance = AVLTree::balanceFactor(root);
-    if(balance == 2 && AVLTree::balanceFactor(root->left) == 1) { //left left rotation
-        root = AVLTree::LLRotation(root);
-    }
-    else if(balance == 2 && AVLTree::balanceFactor(root->left) == -1) { //left right rotation
-        root = AVLTree::LRRotation(root);
-    }
-    else if(balance == 2 && AVLTree::balanceFactor(root->left) == 0) { //left left rotation
-        root = AVLTree::LLRotation(root);
-    }
-    else if(balance == -2 && AVLTree::balanceFactor(root->right) == -1) { //right right rotation
-        root = AVLTree::RRRotation(root);
-    }
-    else if(balance == -2 && AVLTree::balanceFactor(root->right) == 1) { //right left rotation
-        root = AVLTree::RLRotation(root);
-    }
-    else if(balance == -2 && AVLTree::balanceFactor(root->right) == 0){ //left left rotation
-        root = AVLTree::LLRotation(root);
-    }
-    return root;
-
-}
+};
 
 #endif
 

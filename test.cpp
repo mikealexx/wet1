@@ -34,16 +34,21 @@ void print2D(TreeNode<int, int>* root)
     print2DUtil(root, 0);
 }
 
+struct testing {
+    public:
+    int a;
+    int b;
+};
+
 
 int main() {
     AVLTree<int, int> b;
     int c,x;
-    int a = 1;
-    int t = 1;
-    shared_ptr<int> one(&a);
-    shared_ptr<int> two(&t);
-    two = one;
-
+    //testing a = {1,2};
+    //testing g = {3,4};
+    //shared_ptr<int> one(new int(1));
+    //shared_ptr<int> two(new int(2));
+    //one = two;
     do{
         cout<<"\n1.Display Tree";
         cout<<"\n2.Insert";
@@ -66,8 +71,8 @@ int main() {
         {
             cout<<"\nEnter no. ";
             cin>>x;
-            int y = 0;
-            b.root = b.insert(b.root, &y, x);
+            int * y = new int(0);
+            b.root = b.insert(b.root, y, x);
             break;
         }
         
