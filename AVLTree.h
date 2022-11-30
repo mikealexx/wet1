@@ -22,7 +22,7 @@ class AVLTree {
             if (node->right == nullptr)
                 return node->left->height + 1;
 
-            return max(node->left->height, node->right->height) + 1;
+            return AVLTree::max(node->left->height, node->right->height) + 1;
         }
 
         static int balanceFactor(const TreeNode<T, S>* node) {
@@ -32,8 +32,7 @@ class AVLTree {
             return AVLTree::height(node->left) - AVLTree::height(node->right);
         }
 
-        /*
-        static void destruct(const TreeNode<T, S>* node){
+        static void destruct(TreeNode<T, S>* node){
             if(node == nullptr){
                 return;
             }
@@ -43,9 +42,12 @@ class AVLTree {
             }
             destruct(node->left);
             destruct(node->right);
-            destruct(node);
+            delete(node);
         }
-        */
+
+        static AVLTree<T, S> merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2){
+            
+        }
 
         static TreeNode<T, S>* balanceTree(TreeNode<T, S>* root) {
             if(root == nullptr) {
@@ -88,10 +90,10 @@ class AVLTree {
 
             else{
 
-                if (root->left == nullptr && root->right == nullptr)
-                    //root = nullptr;
+                if (root->left == nullptr && root->right == nullptr) {
                     delete(root);
                     return nullptr;
+                }
                 
                 TreeNode<T, S>* temp;
                 if (root->left == nullptr) {
@@ -189,8 +191,6 @@ class AVLTree {
         ~AVLTree();
         TreeNode<T, S>* insert(TreeNode<T, S>* root, T* data, const S& key);
         TreeNode<T, S>* remove(TreeNode<T, S>* root, const S& key);
-
-        class KeyAlreadyExists : public std::exception {};
 };
 
 template<class T, class S>
@@ -198,7 +198,7 @@ AVLTree<T, S>::AVLTree(): root(nullptr) {}
 
 template<class T, class S>
 AVLTree<T, S>::~AVLTree() {
-    //destruct(this->root);
+    AVLTree::destruct(this->root);
 }
 
 
@@ -293,7 +293,7 @@ TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
 
 template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
-    return balanceTree(deleteNode(root, key));
+    return AVLTree::balanceTree(deleteNode(root, key));
 }
 
 #endif

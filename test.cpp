@@ -71,7 +71,7 @@ int main() {
         {
             cout<<"\nEnter no. ";
             cin>>x;
-            int * y = new int(0);
+            int * y = new int(x);
             b.root = b.insert(b.root, y, x);
             break;
         }
