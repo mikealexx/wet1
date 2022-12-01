@@ -9,9 +9,10 @@ class Team {
         int id;
         int gamesPlayed;
         int points;
+        int playersNum;
         Player* topScorer;
         AVLTree<Player, int>* playersById;
-        AVLTree<Player, Stats>* PlayersByStats;
+        AVLTree<Player, Stats>* playersByStats;
 
 
     public:
@@ -22,8 +23,10 @@ class Team {
         int getID() const;
         int getGamesPlayed() const;
         int getPoints() const;
+        int getPlayersNum() const;
         Player* getTopScorer() const;
-
+        AVLTree<Player, int>* getPlayersById() const;
+        AVLTree<Player, Stats>* getPlayersByStats() const;
 };
 
 #endif
