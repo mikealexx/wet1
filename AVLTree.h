@@ -7,6 +7,8 @@ template<class T, class S>
 class AVLTree {
     private:
 
+        int size;
+
         //calculate max
         static int max(int a, int b) {
             return (a>b) ? a : b;
@@ -195,7 +197,7 @@ class AVLTree {
             return newRoot;
         }
 
-        TreeNode<T, S>* insertHelper(TreeNode<T, S>* root, T* data, const S& key) {
+        static TreeNode<T, S>* insertHelper(TreeNode<T, S>* root, T* data, const S& key) {
             if(root == nullptr) {
                 return new TreeNode<T, S>(data, key);
             }
@@ -206,33 +208,61 @@ class AVLTree {
                 root->right = insert(root->right, data, key);
             }
             else { //same keys - illegal
-                //throw AVLTree::KeyAlreadyExists();
+                throw AVLTree::KeyAlreadyExists();
             }
             return AVLTree::balanceTree(root);
         }
 
-        TreeNode<T, S>* removeHelper(TreeNode<T, S>* root, const S& key) {
+        static TreeNode<T, S>* removeHelper(TreeNode<T, S>* root, const S& key) {
             return AVLTree::balanceTree(deleteNode(root, key));
+        }
+
+        static TreeNode<T, S>* findHelper(TreeNode<T, S>* root, const S& key){
+            if (root == nullptr){
+                throw AVLTree<T, S>::NodeNotFound;
+            }
+
+            if (key < root.key){
+                return findHelper(root.left, key);
+            }
+
+            else if (key > root.key){
+                return findHelper(root.right, key);
+            }
+
+            return root;
         }
 
     public:
         TreeNode<T, S>* root;
+        int getSize() const;
 
         AVLTree() = default;
         ~AVLTree();
         void insert(T* data, const S& key);
         void remove(const S& key);
+        TreeNode<T, S>* findNode(const S& key);
+        TreeNode<T, S>* findPredecessor(const S& key);
+        TreeNode<T, S>* findSuccessor(const S& key);
+        class KeyAlreadyExists : public std::exception{};
+        class NodeNotFound : public std::exception{};
 };
 
 template<class T, class S>
-AVLTree<T, S>::AVLTree(): root(nullptr) {}
+AVLTree<T, S>::AVLTree(): 
+    root(nullptr),
+    size(0)
+{}
+
+template<class T, class S>
+int AVLTree<T, S>::getSize() const{
+    return this->size;
+}
 
 template<class T, class S>
 AVLTree<T, S>::~AVLTree() {
     AVLTree::destruct(this->root);
 }
-
-
 
 template<class T, class S>
 void AVLTree<T, S>::insert(T* data, const S& key) {
@@ -242,6 +272,57 @@ void AVLTree<T, S>::insert(T* data, const S& key) {
 template<class T, class S>
 void AVLTree<T, S>::remove(const S& key) {
     this->root = removeHelper(this->root, key);
+}
+
+template<class T, class S>
+TreeNode<T, S>* AVLTree<T, S>::findNode(const S& key){
+    return findHelper(this->root, key);
+}
+
+template<class T, class S>
+TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){ // find predecessor of node. find node, if it has a left son, 
+    node = AVLTree::findNode(key)                         // find its max node and return it. otherwise, go back to the root
+    if (node->left != nullptr){                           // and go down the tree - right if key is bigger than current node's 
+        return AVLTree<T, S>::maxNode(node.left);         // key and left otherwise.
+    }
+    TreeNode<T, S>* curr = this->root;
+    TreeNode<T, S>* pre;
+    while (curr != null){
+        if (key > curr.key){
+            pre = curr;
+            curr = curr.right;
+        }
+        else if (key < curr.key){
+            curr = curr.left;
+        }
+        else{
+            break;
+        }
+    }
+    return pre;
+}
+
+template<class T, class S>
+TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of node. similar to the predecessor's algorithm. 
+    node = AVLTree::findNode(key)                         
+    if (node->right != nullptr){                           
+        return AVLTree<T, S>::minNode(node.right);         
+    }
+    TreeNode<T, S>* curr = this->root;
+    TreeNode<T, S>* succ;
+    while (curr != null){
+        if (key < curr.key){
+            succ = curr;
+            curr = curr.left;
+        }
+        else if (key > curr.key){
+            curr = curr.right;
+        }
+        else{
+            break;
+        }
+    }
+    return succ;
 }
 
 #endif
