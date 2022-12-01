@@ -20,20 +20,57 @@ StatusType world_cup_t::add_team(int teamId, int points)
 	if(teamId <= 0 || points < 0) {
 		return StatusType::INVALID_INPUT;
 	}
-	this->playersById->insert
+	Team* team = new Team(teamId, points);
+	try{
+		this->teams->insert(team, teamId);
+	}
+	catch(const AVLTree<Team, int>::KeyAlreadyExists& e){
+		return StatusType::FAILURE;
+	}
+	
 	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::remove_team(int teamId)
 {
-	// TODO: Your code goes here
-	return StatusType::FAILURE;
+	if (teamId <= 0){
+		return StatusType::INVALID_INPUT;
+	}
+	try{
+		TreeNode<Team, int>* teamNode = this->teams->findNode(teamId);
+		if (teamNode->data->getPlayersNum() != 0){
+			return StatusType::FAILURE;
+		}
+		this->teams->remove(teamId);
+	}
+	catch(const AVLTree<Team, int>::NodeNotFound& e){
+		return StatusType::FAILURE;
+	}
+	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
                                    int goals, int cards, bool goalKeeper)
 {
-	// TODO: Your code goes here
+	if (playerId <= 0 || teamId <= 0 || gamesPlayed < 0 || goals < 0 || cards < 0 || 
+	(gamesPlayed == 0 && (goals > 0 || cards > 0))){
+		return StatusType::INVALID_INPUT;
+	}
+	try{
+		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
+		Player* player = new Player(playerId, teamId, team, gamesPlayed, goals, cards, goalKeeper);
+		Stats stats = *player->getStats();
+		this->playersById->insert(player, playerId);
+		this->playersByStats->insert(player, stats);
+		TreeNode<Player, Stats>* playerNode = this->playersByStats->findNode(stats);
+		playerNode->data->setPre(this->playersByStats->findPredecessor(stats)->data);
+		playerNode->data->setSucc(this->playersByStats->findSuccessor(stats)->data);
+		player->getTeam()->getPlayersById()->insert(player, playerId);
+		player->getTeam()->getPlayersByStats()->insert(player, stats);
+	}
+	catch(const std::exception& e){
+		return StatusType::FAILURE;
+	}
 	return StatusType::SUCCESS;
 }
 
