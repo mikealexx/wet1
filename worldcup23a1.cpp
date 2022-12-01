@@ -2,18 +2,25 @@
 
 world_cup_t::world_cup_t()
 {
-	// TODO: Your code goes here
+	this->teams = new AVLTree<Team, int>();
+	this->playersById = new AVLTree<Player, int>();
+	this->playersByStats = new AVLTree<Player, Stats>();
 }
 
 world_cup_t::~world_cup_t()
 {
-	// TODO: Your code goes here
+	delete(this->teams);
+	delete(this->playersById);
+	delete(this->playersByStats);
 }
 
 
 StatusType world_cup_t::add_team(int teamId, int points)
 {
-	// TODO: Your code goes here
+	if(teamId <= 0 || points < 0) {
+		return StatusType::INVALID_INPUT;
+	}
+	this->playersById->insert
 	return StatusType::SUCCESS;
 }
 

@@ -6,10 +6,13 @@
 template<class T, class S>
 class AVLTree {
     private:
+
+        //calculate max
         static int max(int a, int b) {
             return (a>b) ? a : b;
         }
 
+        //calculate height of a node
         static int height(const TreeNode<T, S>* node) {
             if(node == nullptr) {
                 return 0;
@@ -25,6 +28,7 @@ class AVLTree {
             return AVLTree::max(node->left->height, node->right->height) + 1;
         }
 
+        //calculate balance factor of a node
         static int balanceFactor(const TreeNode<T, S>* node) {
             if(node == nullptr) {
                 return 0;
@@ -32,6 +36,7 @@ class AVLTree {
             return AVLTree::height(node->left) - AVLTree::height(node->right);
         }
 
+        //helper function for the D'CTOR
         static void destruct(TreeNode<T, S>* node){
             if(node == nullptr){
                 return;
@@ -49,6 +54,7 @@ class AVLTree {
             
         }
 
+        //rebalance the tree using rotations
         static TreeNode<T, S>* balanceTree(TreeNode<T, S>* root) {
             if(root == nullptr) {
                 return nullptr;
@@ -121,7 +127,7 @@ class AVLTree {
             return root;
         }
         
-
+        //return predecessor
         static TreeNode<T, S>* minNode(TreeNode<T, S>* node) {
             TreeNode<T, S>* current = node;
             while (current->left != nullptr)
@@ -129,6 +135,7 @@ class AVLTree {
             return current;
         }
 
+        //return successor
         static TreeNode<T, S>* maxNode(TreeNode<T, S>* node) {
             TreeNode<T, S>* current = node;
             while (current->right != nullptr)
@@ -136,6 +143,7 @@ class AVLTree {
             return current;
         }
 
+        //right right rotation
         static TreeNode<T, S>* RRRotation(TreeNode<T, S>* root) {
             TreeNode<T, S>* oldRoot = root;
             TreeNode<T, S>* newRoot = root->right;
@@ -146,6 +154,7 @@ class AVLTree {
             return newRoot;
         }
 
+        //left left rotation
         static TreeNode<T, S>* LLRotation(TreeNode<T, S>* root) {
             TreeNode<T, S>* oldRoot = root;
             TreeNode<T, S>* newRoot = root->left;
@@ -156,6 +165,7 @@ class AVLTree {
             return newRoot;
         }
 
+        //left right rotation
         static TreeNode<T, S>* LRRotation(TreeNode<T, S>* root) {
             TreeNode<T, S>* oldRoot = root;
             TreeNode<T, S>* node = root->left;
@@ -170,6 +180,7 @@ class AVLTree {
             return newRoot;
         }
 
+        //right left rotation
         static TreeNode<T, S>* RLRotation(TreeNode<T, S>* root) {
             TreeNode<T, S>* oldRoot = root;
             TreeNode<T, S>* node = root->right;
@@ -184,13 +195,33 @@ class AVLTree {
             return newRoot;
         }
 
+        TreeNode<T, S>* insertHelper(TreeNode<T, S>* root, T* data, const S& key) {
+            if(root == nullptr) {
+                return new TreeNode<T, S>(data, key);
+            }
+            if(key < root->key) { //locate correct insertion position
+                root->left = insert(root->left, data, key);
+            }
+            else if (key > root->key) {
+                root->right = insert(root->right, data, key);
+            }
+            else { //same keys - illegal
+                //throw AVLTree::KeyAlreadyExists();
+            }
+            return AVLTree::balanceTree(root);
+        }
+
+        TreeNode<T, S>* removeHelper(TreeNode<T, S>* root, const S& key) {
+            return AVLTree::balanceTree(deleteNode(root, key));
+        }
+
     public:
         TreeNode<T, S>* root;
 
-        AVLTree();
+        AVLTree() = default;
         ~AVLTree();
-        TreeNode<T, S>* insert(TreeNode<T, S>* root, T* data, const S& key);
-        TreeNode<T, S>* remove(TreeNode<T, S>* root, const S& key);
+        void insert(T* data, const S& key);
+        void remove(const S& key);
 };
 
 template<class T, class S>
@@ -204,96 +235,13 @@ AVLTree<T, S>::~AVLTree() {
 
 
 template<class T, class S>
-TreeNode<T, S>* AVLTree<T, S>::insert(TreeNode<T, S>* root, T* data, const S& key) {
-    if(root == nullptr) {
-        return new TreeNode<T, S>(data, key);
-    }
-    if(key < root->key) { //locate correct insertion position
-        root->left = insert(root->left, data, key);
-    }
-    else if (key > root->key) {
-        root->right = insert(root->right, data, key);
-    }
-    else { //same keys - illegal
-        //throw AVLTree::KeyAlreadyExists();
-    }
-    return AVLTree::balanceTree(root);
+void AVLTree<T, S>::insert(T* data, const S& key) {
+    this->root = insertHelper(this->root, data, key);
 }
 
-/*
 template<class T, class S>
-TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
-    if(root->left == nullptr && root->right == nullptr){
-        if (this->root->key == root->key){
-            this->root = nullptr;
-        }
-        if(root->key == key) {
-            root = nullptr;
-            return nullptr;
-        }
-        
-        return root;
-    }
-    TreeNode<T, S>* temp;
-    if(key > root->key) {
-        root->right = remove(root->right, key);
-    }
-    else if(key < root->key) {
-        root->left = remove(root->left, key);
-    }
-    else {
-        if(root->left != nullptr) {
-            temp = maxNode(root->left);
-            root->key = temp->key; //DONT FORGET TO ADD DATA
-            root->left = remove(root->left, temp->key);
-        }
-        else {
-            temp = minNode(root->right);
-            root->key = temp->key; //DONT FORGET TO ADD DATA
-            root->right = remove(root->right, temp->key);
-        }
-    }
-    int balance = AVLTree::balanceFactor(root);
-    if(balance == 2) {
-        if(balanceFactor(root->left) >= 0) {
-            root = LLRotation(root);
-        }
-        else {
-            root = LRRotation(root);
-        }
-    }
-    if(balance == -2) {
-        if(balanceFactor()) {
-            
-        }
-    }
-    if(balance == 2 && balanceFactor(root->left) == 1) { //left left rotation
-        root = LLRotation(root);
-    }
-    else if(balance == 2 && balanceFactor(root->left) == -1) { //left right rotation
-        root = LRRotation(root);
-    }
-    else if(balance == 2 && balanceFactor(root->left) == 0) { //left left rotation
-        root = LLRotation(root);
-    }
-
-    
-    else if(balance == -2 && balanceFactor(root->right) == -1) { //right right rotation
-        root = RRRotation(root);
-    }
-    else if(balance == -2 && balanceFactor(root->right) == 1) { //right left rotation
-        root = RLRotation(root);
-    }
-    else if(balance == -2 && balanceFactor(root->right) == 0){ //left left rotation
-        root = LLRotation(root);
-    }
-    return root;
-} */
-
-
-template<class T, class S>
-TreeNode<T, S>* AVLTree<T, S>::remove(TreeNode<T, S>* root, const S& key) {
-    return AVLTree::balanceTree(deleteNode(root, key));
+void AVLTree<T, S>::remove(const S& key) {
+    this->root = removeHelper(this->root, key);
 }
 
 #endif

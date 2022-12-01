@@ -72,7 +72,7 @@ int main() {
             cout<<"\nEnter no. ";
             cin>>x;
             int * y = new int(x);
-            b.root = b.insert(b.root, y, x);
+            b.insert(y, x);
             break;
         }
         
@@ -80,7 +80,7 @@ int main() {
         {
             cout<<"\nWhat to delete? ";
             cin>>x;
-            b.root = b.remove(b.root, x);
+            b.remove(x);
             break;
         }
             
