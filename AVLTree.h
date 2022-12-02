@@ -195,7 +195,7 @@ class AVLTree {
             if(key < root->key) { //locate correct insertion position
                 root->left = insertHelper(root->left, data, key);
             }
-            else if (key > root->key) {
+            else if (key >= root->key) { //REMOVE = LATER - DONT FORGET
                 root->right = insertHelper(root->right, data, key);
             }
             else { //same keys - illegal
@@ -233,11 +233,11 @@ class AVLTree {
             }
             TreeNode<T, S>* rootCopy = new TreeNode<T, S>(*root);
             array[i] = rootCopy;
-            delete(rootCopy);
             i++;
             if(root->right != nullptr) {
                 i = treeToArray(array, root->right, i);
             }
+            delete(rootCopy);
             return i;
         }
 

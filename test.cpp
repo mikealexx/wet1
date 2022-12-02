@@ -1,5 +1,6 @@
 #include "AVLTree.h"
 #include <iostream>
+#include <random>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ int main() {
         here:
         cout<<"\n1.Display Tree";
         cout<<"\n2.Display Size of Tree";
-        cout<<"\n3.Insert";
+        cout<<"\n3.Insert Random Number";
         cout<<"\n4.Delete";
         cout<<"\n5.Switch Tree to Work On (Currently - Tree " << chooseTree << ")";
         cout<<"\n6.Merge the Trees and Display";
@@ -55,6 +56,10 @@ int main() {
         cout<<"\nChoice: ";
 
         cin>>c;
+
+        std::random_device rd;     // Only used once to initialise (seed) engine
+        std::mt19937 rng(rd());    // Random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni(-20,40); // Guaranteed unbiased
 
         switch (c)
         {
@@ -76,8 +81,10 @@ int main() {
                     
             case 3:
             {
-                cout<<"\nEnter no. ";
-                cin>>x;
+                //cout<<"\nEnter no. ";
+                //cin>>x;
+                auto random_integer = uni(rng);
+                x = random_integer;
                 int * y = new int(x);
                 (chooseTree == 1) ? a.insert(y, x) : b.insert(y, x);
                 break;
