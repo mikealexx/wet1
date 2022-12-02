@@ -3,6 +3,9 @@
 
 #include "Player.h"
 #include "AVLTree.h"
+#include <memory>
+
+using std::shared_ptr;
 
 class Team {
     private:

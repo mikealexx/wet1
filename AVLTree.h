@@ -5,7 +5,7 @@
 
 template<class T, class S>
 class AVLTree {
-    private:
+    public: //CHANGE LATER
 
         int size;
 
@@ -40,20 +40,11 @@ class AVLTree {
 
         //helper function for the D'CTOR
         static void destruct(TreeNode<T, S>* node){
-            if(node == nullptr){
-                return;
-            }
-            if(node->left == nullptr && node->right == nullptr){
+            if (node != nullptr) {
+                destruct(node->left);
+                destruct(node->right);
                 delete(node);
-                return;
             }
-            destruct(node->left);
-            destruct(node->right);
-            delete(node);
-        }
-
-        static AVLTree<T, S> merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2){
-            
         }
 
         //rebalance the tree using rotations
@@ -202,10 +193,10 @@ class AVLTree {
                 return new TreeNode<T, S>(data, key);
             }
             if(key < root->key) { //locate correct insertion position
-                root->left = insert(root->left, data, key);
+                root->left = insertHelper(root->left, data, key);
             }
             else if (key > root->key) {
-                root->right = insert(root->right, data, key);
+                root->right = insertHelper(root->right, data, key);
             }
             else { //same keys - illegal
                 throw AVLTree::KeyAlreadyExists();
@@ -218,8 +209,8 @@ class AVLTree {
         }
 
         static TreeNode<T, S>* findHelper(TreeNode<T, S>* root, const S& key){
-            if (root == nullptr){
-                throw AVLTree<T, S>::NodeNotFound;
+            if (root == nullptr) {
+                throw AVLTree<T, S>::NodeNotFound();
             }
 
             if (key < root.key){
@@ -233,11 +224,72 @@ class AVLTree {
             return root;
         }
 
+        static int treeToArray(TreeNode<T, S>* array[], TreeNode<T, S>* root, int i) {
+            if(root == nullptr) {
+                return i;
+            }
+            if(root->left != nullptr) {
+                i = treeToArray(array, root->left, i);
+            }
+            TreeNode<T, S>* rootCopy = new TreeNode<T, S>(*root);
+            array[i] = rootCopy;
+            delete(rootCopy);
+            i++;
+            if(root->right != nullptr) {
+                i = treeToArray(array, root->right, i);
+            }
+            return i;
+        }
+
+        static void mergeArrays(TreeNode<T, S> * arr1[], TreeNode<T, S> * arr2[], int arr1_size, int arr2_size, TreeNode<T, S> * arr3[]) {
+            int i = 0, j = 0, k = 0;
+            TreeNode<T, S>* nodeCopy;
+            while (i < arr1_size && j < arr2_size) {
+                if (arr1[i]->key < arr2[j]->key) {
+                    //nodeCopy = new TreeNode<T, S>(*(arr1[i++]));
+                    //arr3[k++] = nodeCopy;
+                    //delete(nodeCopy);
+                    arr3[k++] = arr1[i++];
+                }
+                else {
+                    //nodeCopy = new TreeNode<T, S>(*(arr2[j++]));
+                    //arr3[k++] = nodeCopy;
+                    //delete(nodeCopy);
+                    arr3[k++] = arr2[j++];
+                }
+            }
+            while (i < arr1_size) {
+                //nodeCopy = new TreeNode<T, S>(*(arr1[i++]));
+                //arr3[k++] = nodeCopy;
+                //delete(nodeCopy);
+                arr3[k++] = arr1[i++];
+            }
+            while (j < arr2_size) {
+                //nodeCopy = new TreeNode<T, S>(*(arr2[j++]));
+                //arr3[k++] = nodeCopy;
+                //delete(nodeCopy);
+                arr3[k++] = arr2[j++];
+            }
+        }
+
+        static TreeNode<T, S>* sortedArrayToAVLTree(TreeNode<T, S> * arr[], int start, int end) {
+            if (start > end) {
+                return nullptr;
+            }
+            int mid = (start + end)/2;
+            TreeNode<T, S>* root = new TreeNode<T, S>(arr[mid]->data.get(), arr[mid]->key);
+            TreeNode<S, T>* newLeft = sortedArrayToAVLTree(arr, start, mid - 1);
+            TreeNode<S, T>* newRight = sortedArrayToAVLTree(arr, mid + 1, end);
+            root->left = newLeft;
+            root->right = newRight;
+            return root;
+        }
+
     public:
         TreeNode<T, S>* root;
+        
         int getSize() const;
-
-        AVLTree() = default;
+        AVLTree();
         ~AVLTree();
         void insert(T* data, const S& key);
         void remove(const S& key);
@@ -246,6 +298,22 @@ class AVLTree {
         TreeNode<T, S>* findSuccessor(const S& key);
         class KeyAlreadyExists : public std::exception{};
         class NodeNotFound : public std::exception{};
+
+        static TreeNode<T, S>* merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2) {
+            int arr1_size = tree1.getSize();
+            int arr2_size = tree2.getSize();
+            int arr3_size = arr1_size + arr2_size;
+            TreeNode<T, S>* arr1[arr1_size]; //first tree sorted array
+            TreeNode<T, S>* arr2[arr2_size]; //second tree sorted array
+            TreeNode<T, S>* arr3[arr3_size]; //sorted merged array of both trees
+            AVLTree::treeToArray(arr1, tree1.root, 0);
+            AVLTree::treeToArray(arr2, tree2.root, 0);
+            AVLTree::mergeArrays(arr1, arr2, arr1_size, arr2_size, arr3);
+            return sortedArrayToAVLTree(arr3, 0, arr3_size-1);
+            delete[] *arr1;
+            delete[] *arr2;
+            delete[] *arr3;
+        }
 };
 
 template<class T, class S>
@@ -267,11 +335,13 @@ AVLTree<T, S>::~AVLTree() {
 template<class T, class S>
 void AVLTree<T, S>::insert(T* data, const S& key) {
     this->root = insertHelper(this->root, data, key);
+    this->size++;
 }
 
 template<class T, class S>
 void AVLTree<T, S>::remove(const S& key) {
     this->root = removeHelper(this->root, key);
+    this->size--;
 }
 
 template<class T, class S>
@@ -280,14 +350,14 @@ TreeNode<T, S>* AVLTree<T, S>::findNode(const S& key){
 }
 
 template<class T, class S>
-TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){ // find predecessor of node. find node, if it has a left son, 
-    node = AVLTree::findNode(key)                         // find its max node and return it. otherwise, go back to the root
-    if (node->left != nullptr){                           // and go down the tree - right if key is bigger than current node's 
-        return AVLTree<T, S>::maxNode(node.left);         // key and left otherwise.
+TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){   // find predecessor of node. find node, if it has a left son, 
+    TreeNode <T, S>* node = AVLTree::findNode(key);             // find its max node and return it. otherwise, go back to the root
+    if (node->left != nullptr){                                 // and go down the tree - right if key is bigger than current node's 
+        return AVLTree<T, S>::maxNode(node.left);               // key and left otherwise.
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* pre;
-    while (curr != null){
+    while (curr != nullptr) {
         if (key > curr.key){
             pre = curr;
             curr = curr.right;
@@ -304,13 +374,13 @@ TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){ // find predecesso
 
 template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of node. similar to the predecessor's algorithm. 
-    node = AVLTree::findNode(key)                         
-    if (node->right != nullptr){                           
-        return AVLTree<T, S>::minNode(node.right);         
+    TreeNode<T, S>* node = AVLTree::findNode(key);                       
+    if (node->right != nullptr) {                           
+        return AVLTree<T, S>::minNode(node.right);       
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* succ;
-    while (curr != null){
+    while (curr != nullptr) {
         if (key < curr.key){
             succ = curr;
             curr = curr.left;
@@ -326,6 +396,3 @@ TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of
 }
 
 #endif
-
-//AVLTree<Player> playerTree;
-//playerTree.insert(playerTree.root, )

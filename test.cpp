@@ -34,25 +34,23 @@ void print2D(TreeNode<int, int>* root)
     print2DUtil(root, 0);
 }
 
-struct testing {
-    public:
-    int a;
-    int b;
-};
-
 
 int main() {
+    
+    AVLTree<int, int> a;
     AVLTree<int, int> b;
+    AVLTree<int, int> merged;
+    int chooseTree = 1;
     int c,x;
-    //testing a = {1,2};
-    //testing g = {3,4};
-    //shared_ptr<int> one(new int(1));
-    //shared_ptr<int> two(new int(2));
-    //one = two;
     do{
+        system("clear");
+        here:
         cout<<"\n1.Display Tree";
-        cout<<"\n2.Insert";
-        cout<<"\n3.Delete\n";
+        cout<<"\n2.Display Size of Tree";
+        cout<<"\n3.Insert";
+        cout<<"\n4.Delete";
+        cout<<"\n5.Switch Tree to Work On (Currently - Tree " << chooseTree << ")";
+        cout<<"\n6.Merge the Trees and Display";
         cout<<"\n0.Exit\n";
         cout<<"\nChoice: ";
 
@@ -60,34 +58,57 @@ int main() {
 
         switch (c)
         {
-        case 1:
-        {
-            print2D(b.root);
-            // to print the tree in level order
-            break;
-        }
-                  
-        case 2:
-        {
-            cout<<"\nEnter no. ";
-            cin>>x;
-            int * y = new int(x);
-            b.insert(y, x);
-            break;
-        }
-        
-        case 3:
-        {
-            cout<<"\nWhat to delete? ";
-            cin>>x;
-            b.remove(x);
-            break;
-        }
+            case 1:
+            {   
+                (chooseTree == 1) ? print2D(a.root) : print2D(b.root);
+                goto here;
+                break;
+            }
+
+            case 2:
+            {
+                int size;
+                (chooseTree == 1) ? size = a.getSize() : size = b.getSize();
+                cout << "\n" << "Size of the tree is " << size << "\n";
+                goto here;
+                break;
+            }
+                    
+            case 3:
+            {
+                cout<<"\nEnter no. ";
+                cin>>x;
+                int * y = new int(x);
+                (chooseTree == 1) ? a.insert(y, x) : b.insert(y, x);
+                break;
+            }
             
-        case 0:
-        {
-            break;
-        }
+            case 4:
+            {
+                cout<<"\nWhat to delete? ";
+                cin>>x;
+                (chooseTree == 1) ? a.remove(x) : b.remove(x);
+                break;
+            }
+
+            case 5:
+            {
+                (chooseTree == 1) ? chooseTree = 2 : chooseTree = 1;
+                break;
+            }
+
+            case 6:
+            {
+                merged.root = AVLTree<int, int>::merge(a, b);
+                print2D(merged.root);
+                goto here;
+                return 0;
+            }
+                
+            case 0:
+            {
+                break;
+            }
         }
 
      } while(c!=0);
