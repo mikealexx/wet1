@@ -112,8 +112,6 @@ class AVLTree {
                 temp = minNode(root->right);
                 root->key = temp->key;
                 root->data = temp->data;
-                //root->data = shared_ptr<T>(temp->data);
-                delete(temp);
                 root->right = deleteNode(root->right, temp->key);
             }
 
@@ -237,7 +235,7 @@ class AVLTree {
             if(root->right != nullptr) {
                 i = treeToArray(array, root->right, i);
             }
-            delete(rootCopy);
+            //delete(rootCopy);
             return i;
         }
 
