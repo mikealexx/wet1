@@ -229,8 +229,8 @@ class AVLTree {
             if(root->left != nullptr) {
                 i = treeToArray(array, root->left, i);
             }
-            TreeNode<T, S>* rootCopy = new TreeNode<T, S>(*root);
-            array[i] = rootCopy;
+            //TreeNode<T, S>* rootCopy = new TreeNode<T, S>(*root);
+            array[i] = root;
             i++;
             if(root->right != nullptr) {
                 i = treeToArray(array, root->right, i);
@@ -268,6 +268,8 @@ class AVLTree {
                 //delete(nodeCopy);
                 arr3[k++] = arr2[j++];
             }
+
+            
         }
 
         static TreeNode<T, S>* sortedArrayToAVLTree(TreeNode<T, S> * arr[], int start, int end) {
@@ -275,7 +277,7 @@ class AVLTree {
                 return nullptr;
             }
             int mid = (start + end)/2;
-            TreeNode<T, S>* root = new TreeNode<T, S>(arr[mid]->data.get(), arr[mid]->key);
+            TreeNode<T, S>* root = arr[mid];
             TreeNode<S, T>* newLeft = sortedArrayToAVLTree(arr, start, mid - 1);
             TreeNode<S, T>* newRight = sortedArrayToAVLTree(arr, mid + 1, end);
             root->left = newLeft;
@@ -307,10 +309,12 @@ class AVLTree {
             AVLTree::treeToArray(arr1, tree1.root, 0);
             AVLTree::treeToArray(arr2, tree2.root, 0);
             AVLTree::mergeArrays(arr1, arr2, arr1_size, arr2_size, arr3);
-            return sortedArrayToAVLTree(arr3, 0, arr3_size-1);
-            delete[] *arr1;
-            delete[] *arr2;
-            delete[] *arr3;
+            //return sortedArrayToAVLTree(arr3, 0, arr3_size-1);
+            TreeNode<T, S>* tree = sortedArrayToAVLTree(arr3, 0, arr3_size-1);
+            delete[] arr1;
+            delete[] arr2;
+            delete[] arr3;
+            return tree;
         }
 };
 

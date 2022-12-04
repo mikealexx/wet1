@@ -44,7 +44,7 @@ int main() {
     int chooseTree = 1;
     int c,x;
     do{
-        system("clear");
+        //system("clear");
         here:
         cout<<"\n1.Display Tree";
         cout<<"\n2.Display Size of Tree";

@@ -16,7 +16,7 @@ public:
 
     TreeNode();
     TreeNode(T* data, const S& key);
-    TreeNode(const TreeNode& other) = default;
+    TreeNode(const TreeNode& other);
     ~TreeNode() = default;
     TreeNode& operator=(const TreeNode& other);
 
@@ -40,12 +40,21 @@ TreeNode<T, S>::TreeNode(T* data, const S& key):
     height(1)
 {}
 
+template<class T, class S>
+TreeNode<T, S>::TreeNode(const TreeNode<T, S>& other):
+    data(other.data),
+    key(other.key),
+    left(nullptr),
+    right(nullptr),
+    height(1)
+{}
+
 template <class T, class S>
 TreeNode<T, S>& TreeNode<T, S>::operator=(const TreeNode<T, S>& other) {
     this->data = other->data;
     this->key = other->key;
-    this->left = other->left;
-    this->right = other->right;
+    this->left = nullptr;
+    this->right = nullptr;
     this->height = other->height;
 }
 
