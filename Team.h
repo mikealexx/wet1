@@ -7,6 +7,9 @@
 
 using std::shared_ptr;
 
+class Player;
+class Player;
+
 class Team {
     private:
         int id;
@@ -38,7 +41,9 @@ class Team {
         void addTotalCards(int cards);
         void addPoints(int points);
         void addGamesPlayed(int games);
+        void setPlayersNum(int players);
         Player* getTopScorer() const;
+        void setTopScorer(Player* player);
         AVLTree<Player, int>* getPlayersById() const;
         AVLTree<Player, Stats>* getPlayersByStats() const;
 };

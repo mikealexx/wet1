@@ -6,6 +6,8 @@ Team::Team(int id, int points):
     points(points),
     playersNum(0),
     goalKeepers(0),
+    totalCards(0),
+    totalGoals(0),
     topScorer(nullptr)
 {
     playersById = new AVLTree<Player, int>();
@@ -60,8 +62,16 @@ void Team::addGamesPlayed(int games) {
     this->gamesPlayed += games;
 }
 
+void Team::setPlayersNum(int players) {
+    this->playersNum = players;
+}
+
 Player* Team::getTopScorer() const{
     return this->topScorer;
+}
+
+void Team::setTopScorer(Player* player) {
+    this->topScorer = player;
 }
 
 AVLTree<Player, int>* Team::getPlayersById() const{

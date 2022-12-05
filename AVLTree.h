@@ -5,9 +5,6 @@
 
 template<class T, class S>
 class AVLTree {
-
-        int size;
-
         //calculate max
         static int max(int a, int b) {
             return (a>b) ? a : b;
@@ -274,7 +271,7 @@ class AVLTree {
 
     public:
         TreeNode<T, S>* root;
-        
+        int size;
         int getSize() const;
         AVLTree();
         ~AVLTree();
@@ -286,7 +283,7 @@ class AVLTree {
         class KeyAlreadyExists : public std::exception{};
         class NodeNotFound : public std::exception{};
 
-        static void merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2, AVLTree<T, S>& merged) {
+        static void merge(AVLTree<T, S> const &tree1, AVLTree<T, S> const &tree2, AVLTree<T, S> const &merged) {
             int arr1_size = tree1.getSize();
             int arr2_size = tree2.getSize();
             int arr3_size = arr1_size + arr2_size;
@@ -341,17 +338,17 @@ template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){   // find predecessor of node. find node, if it has a left son, 
     TreeNode <T, S>* node = AVLTree::findNode(key);             // find its max node and return it. otherwise, go back to the root
     if (node->left != nullptr){                                 // and go down the tree - right if key is bigger than current node's 
-        return AVLTree<T, S>::maxNode(node.left);               // key and left otherwise.
+        return AVLTree<T, S>::maxNode(node->left);               // key and left otherwise.
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* pre;
     while (curr != nullptr) {
-        if (key > curr.key){
+        if (key > curr->key){
             pre = curr;
-            curr = curr.right;
+            curr = curr->right;
         }
-        else if (key < curr.key){
-            curr = curr.left;
+        else if (key < curr->key){
+            curr = curr->left;
         }
         else{
             break;

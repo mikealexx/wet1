@@ -1,4 +1,6 @@
 #include "worldcup23a1.h"
+//class Player;
+//class Team;
 
 world_cup_t::world_cup_t()
 {
@@ -72,6 +74,9 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 		player->getTeam()->getPlayersByStats()->insert(player, stats);
 		team->addTotalCards(player->getCards());
 		team->addTotalGoals(player->getGoals());
+		if(goals > this->topScorer->getGoals()) { //לחשוב מה עושים עם הטופ סקורר לא לשכוחחחח
+			//this->topScorer = 
+		}
 	}
 	catch (const std::bad_alloc& e) {
 		return StatusType::ALLOCATION_ERROR;
@@ -90,7 +95,6 @@ StatusType world_cup_t::remove_player(int playerId)
 	try {
 		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
 		shared_ptr<Team> team = player->getTeam();
-		int teamId = player->getTeamId();
 		Stats* playerStats = player->getStats();
 		this->playersById->remove(playerId);
 		this->playersByStats->remove(*playerStats);
@@ -193,21 +197,51 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 		return StatusType::INVALID_INPUT;
 	}
 	try {
-		Team* team = new Team(teamId, points);
-
+		shared_ptr<Team> team1 = this->teams->findNode(teamId1)->data;
+		shared_ptr<Team> team2 = this->teams->findNode(teamId2)->data;
+		Team* newTeam = new Team(newTeamId, team1->getPoints() + team2->getPoints());
+		newTeam->setPlayersNum(team1->getPlayersNum() + team2->getPlayersNum());
+		newTeam->addGoalKeepers(team1->getGoalKeepers() + team2->getGoalKeepers());
+		newTeam->addTotalGoals(team1->getTotalGoals() + team2->getTotalGoals());
+		newTeam->addTotalCards(team1->getTotalCards() + team2->getTotalCards());
+		if(team1->getTopScorer()->getGoals() > team2->getTopScorer()->getGoals()) {
+			newTeam->setTopScorer(team1->getTopScorer());
+		}
+		else {
+			newTeam->setTopScorer(team2->getTopScorer());
+		}
+		AVLTree<Player, int>::merge(*team1->getPlayersById(), *team2->getPlayersById(), *newTeam->getPlayersById()); //merge player tree by id
+		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
+		this->teams->remove(teamId1);
+		this->teams->remove(teamId2);
+		this->teams->insert(newTeam, newTeamId);
 	}
 	catch(const std::bad_alloc& e) {
 		return StatusType::ALLOCATION_ERROR;
 	}
-	catch(const std::exception& e) [
+	catch(const std::exception& e) {
 		return StatusType::FAILURE;
-	]
+	}
 	return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::get_top_scorer(int teamId)
 {
-	// TODO: Your code goes here
+	if(teamId == 0) {
+		return output_t<int>(StatusType::INVALID_INPUT);
+	}
+	if(teamId < 0) {
+		//try {
+			//return output_t<int>(this->playersById) //dont forget - top scorer
+		//}
+	}
+	try {
+		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
+		return output_t<int>(team->getTopScorer()->getId());
+	}
+	catch(std::exception& e) {
+		return output_t<int>(StatusType::FAILURE);
+	}
 	return 2008;
 }
 
@@ -218,9 +252,36 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
     return (i++==0) ? 11 : 2;
 }
 
+static int treeToIdArray(TreeNode<Player, Stats>* root, int *cosnt output, int i) {
+	if(root == nullptr) {
+		return i;
+	}
+	if(root->left != nullptr) {
+		i = treeToIdArray(root->left, output, i);
+	}
+	(*output)[i] = root->data->getId();
+	i++;
+	if(root->right != nullptr) {
+		i = treeToIdArray(root->right, output, i);
+	}
+	return i;
+}
+
 StatusType world_cup_t::get_all_players(int teamId, int *const output)
 {
-	// TODO: Your code goes here
+	if(teamId == 0 || output == nullptr) {
+		return StatusType::INVALID_INPUT;
+	}
+	try {
+		AVLTree<Player, Stats>* tree;
+		if(teamId < 0) {
+			tree = this->playersByStats;
+		}
+		else {
+			tree = this->teams->findNode(teamId)->data->getPlayersByStats();
+		}
+		treeToIdArray(tree->root, &output, 0);
+	}
     output[0] = 4001;
     output[1] = 4002;
 	return StatusType::SUCCESS;

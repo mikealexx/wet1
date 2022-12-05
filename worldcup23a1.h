@@ -25,6 +25,7 @@ private:
 	AVLTree<Team, int>* teams;
 	AVLTree<Player, int>* playersById;
 	AVLTree<Player, Stats>* playersByStats;
+	Player* topScorer;
 	
 public:
 	// <DO-NOT-MODIFY> {

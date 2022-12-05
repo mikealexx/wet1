@@ -3,6 +3,11 @@
 
 #include "Stats.h"
 #include "Team.h"
+#include <memory>
+
+using std::shared_ptr;
+
+class Team;
 
 class Player {
     private:
