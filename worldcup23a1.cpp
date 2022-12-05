@@ -59,6 +59,9 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 	try{
 		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
 		Player* player = new Player(playerId, teamId, team, gamesPlayed, goals, cards, goalKeeper);
+		if(goalKeeper) {
+			team->addGoalKeepers(1);
+		}
 		Stats stats = *player->getStats();
 		this->playersById->insert(player, playerId);
 		this->playersByStats->insert(player, stats);
@@ -67,6 +70,11 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 		playerNode->data->setSucc(this->playersByStats->findSuccessor(stats)->data);
 		player->getTeam()->getPlayersById()->insert(player, playerId);
 		player->getTeam()->getPlayersByStats()->insert(player, stats);
+		team->addTotalCards(player->getCards());
+		team->addTotalGoals(player->getGoals());
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(const std::exception& e){
 		return StatusType::FAILURE;
@@ -76,38 +84,124 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 
 StatusType world_cup_t::remove_player(int playerId)
 {
-	// TODO: Your code goes here
+	if(playerId <= 0) {
+		return StatusType::INVALID_INPUT;
+	}
+	try {
+		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
+		shared_ptr<Team> team = player->getTeam();
+		int teamId = player->getTeamId();
+		Stats* playerStats = player->getStats();
+		this->playersById->remove(playerId);
+		this->playersByStats->remove(*playerStats);
+		if(player->isGoalKeeper()) {
+			team->addGoalKeepers(-1);
+		}
+		team->addTotalCards(-(player->getCards())); //add player's cards to team's total cards count
+		team->addTotalGoals(-(player->getGoals())); //add player's goals to team's total goals count
+	}
+	catch(const std::exception& e) {
+		return StatusType::FAILURE;
+	}
 	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
                                         int scoredGoals, int cardsReceived)
 {
-	// TODO: Your code goes here
+	if(playerId <= 0 || gamesPlayed < 0 || scoredGoals < 0 || cardsReceived < 0) {
+		return StatusType::INVALID_INPUT;
+	}
+	try {
+		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
+		shared_ptr<Team> team = player->getTeam();
+		player->updateStats(gamesPlayed, scoredGoals, cardsReceived);
+		team->addTotalCards(player->getCards()); //remove player's cards from team's total cards count
+		team->addTotalGoals(player->getGoals()); //remove player's goals from team's total goals count
+	}
+	catch(const std::exception& e) {
+		return StatusType::FAILURE;
+	}
 	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::play_match(int teamId1, int teamId2)
 {
-	// TODO: Your code goes here
+	if(teamId1 <= 0 || teamId2 <= 0) {
+		return StatusType::INVALID_INPUT;
+	}
+	try {
+		shared_ptr<Team> team1 = this->teams->findNode(teamId1)->data;
+		shared_ptr<Team> team2 = this->teams->findNode(teamId2)->data;
+		if(team1->getPlayersNum() < 12 || team1->getGoalKeepers() < 1 || team2->getPlayersNum() < 12 || team2->getGoalKeepers()) {
+			return StatusType::FAILURE;
+		}
+		int team1GameScore = team1->getPoints() + (team1->getTotalGoals() - team1->getTotalGoals());
+		int team2GameScore = team2->getPoints() + (team2->getTotalGoals() - team2->getTotalGoals());
+		if(team1GameScore > team2GameScore) { //team1 wins
+			team1->addPoints(3);
+		}
+		else if(team1GameScore < team2GameScore){ //team2 wins
+			team2->addPoints(3);
+		}
+		else { //tie
+			team1->addPoints(1);
+			team2->addPoints(1);
+		}
+		team1->addGamesPlayed(1);
+		team2->addGamesPlayed(1);
+	}
+	catch(const std::exception& e) {
+		return StatusType::FAILURE;
+	}
 	return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::get_num_played_games(int playerId)
 {
-	// TODO: Your code goes here
+	if(playerId <= 0) {
+		return output_t<int>(StatusType::INVALID_INPUT);
+	}
+	try {
+		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
+		return output_t<int>(player->getGamesPlayed());
+	}
+	catch(const std::exception& e) {
+		return output_t<int>(StatusType::FAILURE);
+	}
 	return 22;
 }
 
 output_t<int> world_cup_t::get_team_points(int teamId)
 {
-	// TODO: Your code goes here
+	if(teamId <= 0) {
+		return output_t<int>(StatusType::INVALID_INPUT);
+	}
+	try {
+		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
+		return output_t<int>(team->getPoints());
+	}
+	catch(const std::exception& e) {
+		return output_t<int>(StatusType::FAILURE);
+	}
 	return 30003;
 }
 
 StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 {
-	// TODO: Your code goes here
+	if(teamId1 <= 0 || teamId2 <= 0 || newTeamId <= 0) {
+		return StatusType::INVALID_INPUT;
+	}
+	try {
+		Team* team = new Team(teamId, points);
+
+	}
+	catch(const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
+	catch(const std::exception& e) [
+		return StatusType::FAILURE;
+	]
 	return StatusType::SUCCESS;
 }
 

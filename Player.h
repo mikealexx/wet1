@@ -35,15 +35,16 @@ class Player {
         shared_ptr<Player> getPre() const;
         shared_ptr<Player> getSucc() const;
 
-        bool setId(const int id);
-        bool setTeamId(const int teamId);
-        bool setTeam(Team* myTeam);
-        bool setGamesPlayed(const int gamesPlayed);
-        bool setGoals(const int goals);
-        bool setCards(const int cards);
-        bool setGoalKeeper(const bool isGoalKeeper);
-        bool setPre(shared_ptr<Player> player);
-        bool setSucc(shared_ptr<Player> player);
+        void setId(const int id);
+        void setTeamId(const int teamId);
+        void setTeam(Team* myTeam);
+        void addGamesPlayed(const int gamesPlayed);
+        void addGoals(const int goals);
+        void addCards(const int cards);
+        void setGoalKeeper(const bool isGoalKeeper);
+        void setPre(shared_ptr<Player> player);
+        void setSucc(shared_ptr<Player> player);
+        void updateStats(int gamesPlayed, int scoredGoals, int cardsReceived);
 };
 
 #endif

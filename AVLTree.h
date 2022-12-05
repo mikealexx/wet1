@@ -5,7 +5,6 @@
 
 template<class T, class S>
 class AVLTree {
-    public: //CHANGE LATER
 
         int size;
 
@@ -193,7 +192,7 @@ class AVLTree {
             if(key < root->key) { //locate correct insertion position
                 root->left = insertHelper(root->left, data, key);
             }
-            else if (key >= root->key) { //REMOVE = LATER - DONT FORGET
+            else if (key > root->key) { //REMOVE = LATER - DONT FORGET
                 root->right = insertHelper(root->right, data, key);
             }
             else { //same keys - illegal
@@ -287,18 +286,21 @@ class AVLTree {
         class KeyAlreadyExists : public std::exception{};
         class NodeNotFound : public std::exception{};
 
-        static TreeNode<T, S>* merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2) {
+        static void merge(AVLTree<T, S>& tree1, AVLTree<T, S>& tree2, AVLTree<T, S>& merged) {
             int arr1_size = tree1.getSize();
             int arr2_size = tree2.getSize();
             int arr3_size = arr1_size + arr2_size;
-            TreeNode<T, S>* arr1[arr1_size]; //first tree sorted array
-            TreeNode<T, S>* arr2[arr2_size]; //second tree sorted array
-            TreeNode<T, S>* arr3[arr3_size]; //sorted merged array of both trees
+            TreeNode<T, S>** arr1 = new TreeNode<T, S>* [arr1_size]; //first tree sorted array
+            TreeNode<T, S>** arr2 = new TreeNode<T, S>* [arr2_size]; //second tree sorted array
+            TreeNode<T, S>** arr3 = new TreeNode<T, S>* [arr3_size]; //sorted merged array of both trees
             AVLTree::treeToArray(arr1, tree1.root, 0);
             AVLTree::treeToArray(arr2, tree2.root, 0);
             AVLTree::mergeArrays(arr1, arr2, arr1_size, arr2_size, arr3);
-            TreeNode<T, S>* tree = sortedArrayToAVLTree(arr3, 0, arr3_size-1);
-            return tree;
+            merged.root = sortedArrayToAVLTree(arr3, 0, arr3_size-1);
+            merged.size = arr3_size;
+            delete[] arr1;
+            delete[] arr2;
+            delete[] arr3;
         }
 };
 

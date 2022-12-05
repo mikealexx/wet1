@@ -106,7 +106,7 @@ int main() {
 
             case 6:
             {
-                merged.root = AVLTree<int, int>::merge(a, b);
+                AVLTree<int, int>::merge(a, b, merged);
                 print2D(merged.root);
                 goto here;
                 return 0;

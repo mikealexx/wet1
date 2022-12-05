@@ -52,65 +52,44 @@ shared_ptr<Player> Player::getSucc() const{
     return this->succ;
 }
 
-bool Player::setId(const int id) {
-    if(id <= 0) {
-        return false;
-    }
+void Player::setId(const int id) {
     this->id = id;
-    return true;
 }
 
-bool Player::setTeamId(const int teamId) {
-    if(teamId <= 0) {
-        return false;
-    }
+void Player::setTeamId(const int teamId) {
     this->teamId = teamId;
-    return true;
 }
 
-bool Player::setTeam(Team* myTeam) {
-    if(myTeam == nullptr) {
-        return false;
-    }
+void Player::setTeam(Team* myTeam) {
     this->team = shared_ptr<Team>(myTeam);
-    return true;
 }
 
-bool Player::setGamesPlayed(const int gamesPlayed) {
-    if(gamesPlayed < 0) {
-        return false;
-    }
-    this->gamesPlayed = gamesPlayed;
-    return true;
+void Player::addGamesPlayed(const int gamesPlayed) {
+    this->gamesPlayed += gamesPlayed;
 }
 
-bool Player::setGoals(const int goals) {
-    if(goals < 0) {
-        return false;
-    }
-    this->goals = goals;
-    return true;
+void Player::addGoals(const int goals) {
+    this->goals += goals;
 }
 
-bool Player::setCards(const int cards) {
-    if(cards < 0) {
-        return false;
-    }
-    this->cards = cards;
-    return false;
+void Player::addCards(const int cards) {
+    this->cards += cards;
 }
 
-bool Player::setGoalKeeper(const bool isGoalKeeper) {
+void Player::setGoalKeeper(const bool isGoalKeeper) {
     this->goalKeeper = goalKeeper;
-    return true;
 }
 
-bool Player::setPre(shared_ptr<Player> player) {
+void Player::setPre(shared_ptr<Player> player) {
     this->pre = player;
-    return true;
 }
 
-bool Player::setSucc(shared_ptr<Player> player) {
+void Player::setSucc(shared_ptr<Player> player) {
     this->succ = player;
-    return true;
+}
+
+void Player::updateStats(int gamesPlayed, int scoredGoals, int cardsReceived) {
+    this->gamesPlayed += gamesPlayed;
+    this->goals += scoredGoals;
+    this->cards += cardsReceived;
 }
