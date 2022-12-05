@@ -42,7 +42,7 @@ TreeNode<T, S>::TreeNode(T* data, const S& key):
 
 template<class T, class S>
 TreeNode<T, S>::TreeNode(const TreeNode<T, S>& other):
-    data(other.data),
+    data(shared_ptr<T>(other.data)),
     key(other.key),
     left(nullptr),
     right(nullptr),
@@ -51,11 +51,12 @@ TreeNode<T, S>::TreeNode(const TreeNode<T, S>& other):
 
 template <class T, class S>
 TreeNode<T, S>& TreeNode<T, S>::operator=(const TreeNode<T, S>& other) {
-    this->data = other->data;
+    this->data = shared_ptr<T>(other.data);
     this->key = other->key;
     this->left = nullptr;
     this->right = nullptr;
     this->height = other->height;
+    return *this;
 }
 
 #endif

@@ -229,13 +229,11 @@ class AVLTree {
             if(root->left != nullptr) {
                 i = treeToArray(array, root->left, i);
             }
-            //TreeNode<T, S>* rootCopy = new TreeNode<T, S>(*root);
             array[i] = root;
             i++;
             if(root->right != nullptr) {
                 i = treeToArray(array, root->right, i);
             }
-            //delete(rootCopy);
             return i;
         }
 
@@ -244,28 +242,16 @@ class AVLTree {
             TreeNode<T, S>* nodeCopy;
             while (i < arr1_size && j < arr2_size) {
                 if (arr1[i]->key < arr2[j]->key) {
-                    //nodeCopy = new TreeNode<T, S>(*(arr1[i++]));
-                    //arr3[k++] = nodeCopy;
-                    //delete(nodeCopy);
                     arr3[k++] = arr1[i++];
                 }
                 else {
-                    //nodeCopy = new TreeNode<T, S>(*(arr2[j++]));
-                    //arr3[k++] = nodeCopy;
-                    //delete(nodeCopy);
                     arr3[k++] = arr2[j++];
                 }
             }
             while (i < arr1_size) {
-                //nodeCopy = new TreeNode<T, S>(*(arr1[i++]));
-                //arr3[k++] = nodeCopy;
-                //delete(nodeCopy);
                 arr3[k++] = arr1[i++];
             }
             while (j < arr2_size) {
-                //nodeCopy = new TreeNode<T, S>(*(arr2[j++]));
-                //arr3[k++] = nodeCopy;
-                //delete(nodeCopy);
                 arr3[k++] = arr2[j++];
             }
 
@@ -277,7 +263,9 @@ class AVLTree {
                 return nullptr;
             }
             int mid = (start + end)/2;
-            TreeNode<T, S>* root = arr[mid];
+            TreeNode<T, S>* root = new TreeNode<T, S>();
+            root->data = shared_ptr<T>(arr[mid]->data);
+            root->key = arr[mid]->key;
             TreeNode<S, T>* newLeft = sortedArrayToAVLTree(arr, start, mid - 1);
             TreeNode<S, T>* newRight = sortedArrayToAVLTree(arr, mid + 1, end);
             root->left = newLeft;
@@ -309,11 +297,7 @@ class AVLTree {
             AVLTree::treeToArray(arr1, tree1.root, 0);
             AVLTree::treeToArray(arr2, tree2.root, 0);
             AVLTree::mergeArrays(arr1, arr2, arr1_size, arr2_size, arr3);
-            //return sortedArrayToAVLTree(arr3, 0, arr3_size-1);
             TreeNode<T, S>* tree = sortedArrayToAVLTree(arr3, 0, arr3_size-1);
-            delete[] arr1;
-            delete[] arr2;
-            delete[] arr3;
             return tree;
         }
 };
