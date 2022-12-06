@@ -50,4 +50,4 @@ get_all_players 4
 get_closest_player 2008 2
 knockout_winner 0 3
 remove_team 2
-remove_player 3008
+

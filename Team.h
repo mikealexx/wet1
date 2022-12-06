@@ -25,7 +25,7 @@ class Team {
 
 
     public:
-        Team() = default;
+        Team() = delete;
         Team(int id, int points);
         ~Team();
 
@@ -37,6 +37,7 @@ class Team {
         int getTotalGoals() const;
         int getGoalKeepers() const;
         void addGoalKeepers(int goalKeepers);
+        void addPlayersNum(int players);
         void addTotalGoals(int goals);
         void addTotalCards(int cards);
         void addPoints(int points);

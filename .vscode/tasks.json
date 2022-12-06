@@ -8,6 +8,10 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "worldcup23a1.cpp",
+                "Stats.cpp",
+                "Player.cpp",
+                "Team.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

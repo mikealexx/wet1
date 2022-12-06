@@ -19,6 +19,7 @@
 #include "AVLTree.h"
 #include "Team.h"
 #include "Player.h"
+#include "Team.h"
 
 class world_cup_t {
 private:

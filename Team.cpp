@@ -14,6 +14,11 @@ Team::Team(int id, int points):
     playersByStats = new AVLTree<Player, Stats>();
 }
 
+Team::~Team() {
+    delete this->playersById;
+    delete this->playersByStats;
+}
+
 int Team::getID() const{
     return this->id;
 }
@@ -44,6 +49,10 @@ int Team::getGoalKeepers() const {
 
 void Team::addGoalKeepers(int goalKeepers) {
     this->goalKeepers += goalKeepers;
+}
+
+void Team::addPlayersNum(int players) {
+    this->playersNum += players;
 }
 
 void Team::addTotalGoals(int goals) {
