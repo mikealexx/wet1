@@ -25,7 +25,7 @@ class Team {
 
 
     public:
-        Team() = delete;
+        Team() = default;
         Team(int id, int points);
         ~Team();
 
@@ -44,6 +44,7 @@ class Team {
         void setPlayersNum(int players);
         shared_ptr<Player> getTopScorer() const;
         void setTopScorer(shared_ptr<Player> player);
+        bool isKosher() const;
         AVLTree<Player, int>* getPlayersById() const;
         AVLTree<Player, Stats>* getPlayersByStats() const;
 };

@@ -36,8 +36,9 @@ int Player::getCards() const {
     return this->cards;
 }
 
-Stats* Player::getStats() const{
-    return &Stats(this->getGoals(), this->getCards(), this->getId());
+Stats Player::getStats() const{
+    Stats stats(this->getGoals(), this->getCards(), this->getId());
+    return stats;
 }
 
 bool Player::isGoalKeeper() const {

@@ -235,7 +235,6 @@ class AVLTree {
 
         static void mergeArrays(TreeNode<T, S> * arr1[], TreeNode<T, S> * arr2[], int arr1_size, int arr2_size, TreeNode<T, S> * arr3[]) {
             int i = 0, j = 0, k = 0;
-            TreeNode<T, S>* nodeCopy;
             while (i < arr1_size && j < arr2_size) {
                 if (arr1[i]->key < arr2[j]->key) {
                     arr3[k++] = arr1[i++];

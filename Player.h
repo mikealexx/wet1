@@ -35,7 +35,7 @@ class Player {
         int getGamesPlayed() const;
         int getGoals() const;
         int getCards() const;
-        Stats* getStats() const;
+        Stats getStats() const;
         bool isGoalKeeper() const;
         shared_ptr<Player> getPre() const;
         shared_ptr<Player> getSucc() const;

@@ -74,6 +74,10 @@ void Team::setTopScorer(shared_ptr<Player> player) {
     this->topScorer = player;
 }
 
+bool Team::isKosher() const {
+    return (this->playersById->getSize() >=11 && this->getGoalKeepers() >= 1);
+}
+
 AVLTree<Player, int>* Team::getPlayersById() const{
     return this->playersById;
 }
