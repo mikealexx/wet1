@@ -25,7 +25,7 @@ shared_ptr<Team> Player::getTeam() const {
 }
 
 int Player::getGamesPlayed() const {
-    return this->gamesPlayed;
+    return this->gamesPlayed + this->team->getGamesPlayed();
 }
 
 int Player::getGoals() const {
@@ -37,7 +37,7 @@ int Player::getCards() const {
 }
 
 Stats* Player::getStats() const{
-    return new Stats(this->getGoals(), this-> getCards(), this->getId());
+    return &Stats(this->getGoals(), this->getCards(), this->getId());
 }
 
 bool Player::isGoalKeeper() const {

@@ -66,11 +66,11 @@ void Team::setPlayersNum(int players) {
     this->playersNum = players;
 }
 
-Player* Team::getTopScorer() const{
+shared_ptr<Player> Team::getTopScorer() const{
     return this->topScorer;
 }
 
-void Team::setTopScorer(Player* player) {
+void Team::setTopScorer(shared_ptr<Player> player) {
     this->topScorer = player;
 }
 

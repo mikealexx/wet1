@@ -207,12 +207,12 @@ class AVLTree {
                 throw AVLTree<T, S>::NodeNotFound();
             }
 
-            if (key < root.key){
-                return findHelper(root.left, key);
+            if (key < root->key){
+                return findHelper(root->left, key);
             }
 
-            else if (key > root.key){
-                return findHelper(root.right, key);
+            else if (key > root->key){
+                return findHelper(root->right, key);
             }
 
             return root;
@@ -262,8 +262,8 @@ class AVLTree {
             TreeNode<T, S>* root = new TreeNode<T, S>();
             root->data = shared_ptr<T>(arr[mid]->data);
             root->key = arr[mid]->key;
-            TreeNode<S, T>* newLeft = sortedArrayToAVLTree(arr, start, mid - 1);
-            TreeNode<S, T>* newRight = sortedArrayToAVLTree(arr, mid + 1, end);
+            TreeNode<T, S>* newLeft = sortedArrayToAVLTree(arr, start, mid - 1);
+            TreeNode<T, S>* newRight = sortedArrayToAVLTree(arr, mid + 1, end);
             root->left = newLeft;
             root->right = newRight;
             return root;
@@ -283,7 +283,7 @@ class AVLTree {
         class KeyAlreadyExists : public std::exception{};
         class NodeNotFound : public std::exception{};
 
-        static void merge(AVLTree<T, S> const &tree1, AVLTree<T, S> const &tree2, AVLTree<T, S> const &merged) {
+        static void merge(AVLTree<T, S> const &tree1, AVLTree<T, S> const &tree2, AVLTree<T, S> &merged) {
             int arr1_size = tree1.getSize();
             int arr2_size = tree2.getSize();
             int arr3_size = arr1_size + arr2_size;
@@ -338,16 +338,16 @@ template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){   // find predecessor of node. find node, if it has a left son, 
     TreeNode <T, S>* node = AVLTree::findNode(key);             // find its max node and return it. otherwise, go back to the root
     if (node->left != nullptr){                                 // and go down the tree - right if key is bigger than current node's 
-        return AVLTree<T, S>::maxNode(node->left);               // key and left otherwise.
+        return AVLTree<T, S>::maxNode(node->left);              // key and left otherwise.
     }
     TreeNode<T, S>* curr = this->root;
-    TreeNode<T, S>* pre;
+    TreeNode<T, S>* pre = nullptr;
     while (curr != nullptr) {
-        if (key > curr->key){
+        if (key > curr->key) {
             pre = curr;
             curr = curr->right;
         }
-        else if (key < curr->key){
+        else if (key < curr->key) {
             curr = curr->left;
         }
         else{
@@ -361,17 +361,17 @@ template<class T, class S>
 TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of node. similar to the predecessor's algorithm. 
     TreeNode<T, S>* node = AVLTree::findNode(key);                       
     if (node->right != nullptr) {                           
-        return AVLTree<T, S>::minNode(node.right);       
+        return AVLTree<T, S>::minNode(node->right);       
     }
     TreeNode<T, S>* curr = this->root;
-    TreeNode<T, S>* succ;
+    TreeNode<T, S>* succ = nullptr;
     while (curr != nullptr) {
-        if (key < curr.key){
+        if (key < curr->key){
             succ = curr;
-            curr = curr.left;
+            curr = curr->left;
         }
-        else if (key > curr.key){
-            curr = curr.right;
+        else if (key > curr->key){
+            curr = curr->right;
         }
         else{
             break;

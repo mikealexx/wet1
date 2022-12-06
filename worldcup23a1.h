@@ -23,9 +23,10 @@
 class world_cup_t {
 private:
 	AVLTree<Team, int>* teams;
+	AVLTree<Team, int>* kosherTeams;
 	AVLTree<Player, int>* playersById;
 	AVLTree<Player, Stats>* playersByStats;
-	Player* topScorer;
+	shared_ptr<Player> topScorer;
 	
 public:
 	// <DO-NOT-MODIFY> {

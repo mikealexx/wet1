@@ -23,7 +23,7 @@ class Player {
         
 
     public:
-        Player() = delete;
+        Player() = default;
         ~Player() = default;
         Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int goals, int cards, bool goalKeeper);
         Player(const Player& other) = default;

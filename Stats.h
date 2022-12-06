@@ -1,23 +1,31 @@
 
 // A Class for comparing players by the rules of get_closest_player.
-class Stats{
+class Stats {
 public:
 int goals;
 int cards;
-int playerID;
+int playerId;
 
-Stats(int goals, int cards, int playerID);
+static int abs(int x) {
+    return (x >= 0) ? x : -x;
+}
 
-friend bool operator<(const Stats& l, const Stats& r){
-    if (l.goals < r.goals){
+Stats(const int goals, const int cards, const int playerId);
+
+Stats();
+
+int getClosest(Stats* stats1, Stats* stats2);
+
+friend bool operator<(const Stats& l, const Stats& r) {
+    if (l.goals < r.goals) {
         return true;
     }
-    else if (l.goals == r.goals){
-        if (l.cards < r.cards){
+    else if (l.goals == r.goals) {
+        if (l.cards < r.cards) {
             return true;
         }
-        else if (l.cards == r.cards){
-            if (l.playerID < r.playerID){
+        else if (l.cards == r.cards) {
+            if (l.playerId < r.playerId) {
                 return true;
             }
         }
@@ -25,7 +33,7 @@ friend bool operator<(const Stats& l, const Stats& r){
     return false;
 }
 
-friend bool operator>(const Stats& l, const Stats& r){
+friend bool operator>(const Stats& l, const Stats& r) {
     return (r < l);
 }
 

@@ -17,9 +17,9 @@ class Team {
         int points;
         int playersNum;
         int goalKeepers;
-        int totalGoals;
         int totalCards;
-        Player* topScorer;
+        int totalGoals;
+        shared_ptr<Player> topScorer;
         AVLTree<Player, int>* playersById;
         AVLTree<Player, Stats>* playersByStats;
 
@@ -42,8 +42,8 @@ class Team {
         void addPoints(int points);
         void addGamesPlayed(int games);
         void setPlayersNum(int players);
-        Player* getTopScorer() const;
-        void setTopScorer(Player* player);
+        shared_ptr<Player> getTopScorer() const;
+        void setTopScorer(shared_ptr<Player> player);
         AVLTree<Player, int>* getPlayersById() const;
         AVLTree<Player, Stats>* getPlayersByStats() const;
 };

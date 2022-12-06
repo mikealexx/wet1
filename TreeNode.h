@@ -9,7 +9,7 @@ template <class T, class S>
 class TreeNode {
 public:
     shared_ptr<T> data;
-    T key;
+    S key;
     TreeNode* left;
     TreeNode* right;
     int height;
