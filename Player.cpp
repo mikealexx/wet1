@@ -78,7 +78,7 @@ void Player::addCards(const int cards) {
 }
 
 void Player::setGoalKeeper(const bool isGoalKeeper) {
-    this->goalKeeper = goalKeeper;
+    this->goalKeeper = isGoalKeeper;
 }
 
 void Player::setPre(shared_ptr<Player> player) {
