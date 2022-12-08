@@ -341,16 +341,13 @@ TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){   // find predeces
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* pre = nullptr;
-    while (curr != nullptr) {
+    while (curr != nullptr || key == curr->key) {
         if (key > curr->key) {
             pre = curr;
             curr = curr->right;
         }
         else if (key < curr->key) {
             curr = curr->left;
-        }
-        else{
-            break;
         }
     }
     return pre;
@@ -364,16 +361,13 @@ TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* succ = nullptr;
-    while (curr != nullptr) {
+    while (curr != nullptr || key == curr->key) {
         if (key < curr->key){
             succ = curr;
             curr = curr->left;
         }
         else if (key > curr->key){
             curr = curr->right;
-        }
-        else{
-            break;
         }
     }
     return succ;
