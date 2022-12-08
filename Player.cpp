@@ -29,7 +29,7 @@ int Player::getGamesPlayed() const {
 }
 
 int Player::getGoals() const {
-    return this->goals;
+    return this->goals + this->getTeam()->getTotalGoals();
 }
 
 int Player::getCards() const {
