@@ -63,7 +63,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 	}
 	try{
 		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
-		Player* player = new Player(playerId, teamId, team, gamesPlayed, goals, cards, goalKeeper);
+		Player* player = new Player(playerId, teamId, team, gamesPlayed - team->getGamesPlayed(), goals, cards, goalKeeper);
 		if(goalKeeper) {
 			team->addGoalKeepers(1);
 		}
@@ -131,20 +131,10 @@ StatusType world_cup_t::remove_player(int playerId)
 		bool isKosher = team->isKosher();
 		Stats playerStats = player->getStats();
 		if (this->topScorer == player){
-			if(player->getPre() != nullptr) {
-				this->topScorer = player->getPre();
-			}
-			else {
-				this->topScorer = nullptr;
-			}
+			this->topScorer = player->getPre();
 		}
-		if(player->getTeam()->getTopScorer() == player) {
-			if(player->getPre() != nullptr) {
-				player->getTeam()->setTopScorer(player->getPre());
-			}
-			else {
-				player->getTeam()->setTopScorer(nullptr);
-			}
+		if(team->getTopScorer() == player) {
+			team->setTopScorer(team->getPlayersByStats()->findPredecessor(player->getStats())->data);
 		}
 		player->getPre()->setSucc(player->getSucc());
 		player->getSucc()->setPre(player->getPre());
@@ -401,6 +391,31 @@ struct TeamSim {
 	//struct TeamSim* prev;
 };
 
+
+/*static int getCount(TreeNode<Team, int>* root, int low, int high)
+{
+    if (root == nullptr) {
+		return 0;
+	}
+
+    if (root->key == high && root->key == low){
+		return 1;
+	}
+ 
+    // If current node is in range, then include it in count and
+    // recur for left and right children of it
+    if (root->key <= high && root->key>= low)
+         return 1 + getCount(root->left, low, high) +
+                    getCount(root->right, low, high);
+ 
+    // If current node is smaller than low, then do for right
+    else if (root->key < low)
+         return getCount(root->right, low, high);
+ 
+    // Else do for left child
+    else return getCount(root->left, low, high);
+}*/
+
 static int countKosherTeamsId(TreeNode<Team, int>* node, int minId, int maxId, int count) {
 	if(node == nullptr || (node != nullptr && node->left != nullptr && node->left->key < minId) || (node != nullptr && node->right != nullptr && node->right->key > maxId)) {
 		return count;
@@ -468,7 +483,6 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 	TeamSim* teams = new TeamSim;
 	teams->teamId = -1;
 	teams->points = -1;
-	//teams->prev = nullptr;
 	teams->next = nullptr;
 	fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
 	TeamSim* curr = teams;
@@ -484,6 +498,4 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 		playGames(teams);
 	}
 	return output_t<int>(teams->next->teamId);
-	
-	return 2;
 }
