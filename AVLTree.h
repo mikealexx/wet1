@@ -39,7 +39,7 @@ class AVLTree {
             if (node != nullptr) {
                 destruct(node->left);
                 destruct(node->right);
-                delete(node);
+                delete node;
             }
         }
 

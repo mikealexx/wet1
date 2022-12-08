@@ -2,7 +2,6 @@
 #define TreeNodeID_h
 
 #include <memory>
-//#include "Player.h"
 using namespace std;
 
 template <class T, class S>

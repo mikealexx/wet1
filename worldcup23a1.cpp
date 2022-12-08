@@ -13,10 +13,10 @@ world_cup_t::world_cup_t():
 
 world_cup_t::~world_cup_t()
 {
-	delete this->teams;
-	delete this->kosherTeams;
 	delete this->playersById;
 	delete this->playersByStats;
+	delete this->kosherTeams;
+	delete this->teams;
 }
 
 
@@ -136,10 +136,18 @@ StatusType world_cup_t::remove_player(int playerId)
 			this->topScorer = player->getPre();
 		}
 		if(team->getTopScorer() == player) {
-			team->setTopScorer(team->getPlayersByStats()->findPredecessor(player->getStats())->data);
+			TreeNode<Player, Stats>* pred = this->playersByStats->findPredecessor(player->getStats());
+			if(pred != nullptr) {
+				team->setTopScorer(pred->data);
+			}
+			else {
+				team->setTopScorer(nullptr);
+			}
 		}
-		player->getPre()->setSucc(player->getSucc());
-		player->getSucc()->setPre(player->getPre());
+		if (player->getPre() != nullptr)
+			player->getPre()->setSucc(player->getSucc());
+		if (player->getSucc() != nullptr)
+			player->getSucc()->setPre(player->getPre());
 		this->playersById->remove(playerId);
 		this->playersByStats->remove(playerStats);
 		team->getPlayersById()->remove(playerId);
