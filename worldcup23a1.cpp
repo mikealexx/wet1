@@ -25,7 +25,7 @@ StatusType world_cup_t::add_team(int teamId, int points)
 	if(teamId <= 0 || points < 0) {
 		return StatusType::INVALID_INPUT;
 	}
-	Team* team = new Team(teamId, points);
+	shared_ptr<Team> team = shared_ptr<Team>(new Team(teamId, points));
 	try{
 		this->teams->insert(team, teamId);
 	}
@@ -63,7 +63,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 	}
 	try{
 		shared_ptr<Team> team = this->teams->findNode(teamId)->data;
-		Player* player = new Player(playerId, teamId, team, gamesPlayed - team->getGamesPlayed(), goals, cards, goalKeeper);
+		shared_ptr<Player> player = shared_ptr<Player>(new Player(playerId, teamId, team, gamesPlayed - team->getGamesPlayed(), goals, cards, goalKeeper));
 		if(goalKeeper) {
 			team->addGoalKeepers(1);
 		}
@@ -101,7 +101,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 		team->addTotalCards(player->getCards());
 		team->addTotalGoals(player->getGoals());
 		if (!isKosher && team->isKosher()){ // Team was not kosher and now is add to kosher trees
-			this->kosherTeams->insert(team.get(), teamId);
+			this->kosherTeams->insert(team, teamId);
 		}
 		if(player->getTeam()->getTopScorer() == nullptr || goals > player->getTeam()->getTopScorer()->getGoals()) { 
 			player->getTeam()->setTopScorer(playerNode->data);
@@ -140,17 +140,17 @@ StatusType world_cup_t::remove_player(int playerId)
 		player->getSucc()->setPre(player->getPre());
 		this->playersById->remove(playerId);
 		this->playersByStats->remove(playerStats);
-		team->getPlayersById()->remove(player->getId());
-		team->getPlayersByStats()->remove(player->getStats());
+		team->getPlayersById()->remove(playerId);
+		team->getPlayersByStats()->remove(playerStats);
 		if(player->isGoalKeeper()) {
 			team->addGoalKeepers(-1);
 		}
 		team->addTotalCards(-(player->getCards())); //add player's cards to team's total cards count
 		team->addTotalGoals(-(player->getGoals())); //add player's goals to team's total goals count
+		team->addPlayersNum(-1);
 		if(isKosher && !team->isKosher()) { // If was kosher and now not remove from kosher trees
 			this->kosherTeams->remove(team->getID());
 		}
-		team->addPlayersNum(-1);
 	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
@@ -252,7 +252,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 	try {
 		shared_ptr<Team> team1 = this->teams->findNode(teamId1)->data;
 		shared_ptr<Team> team2 = this->teams->findNode(teamId2)->data;
-		Team* newTeam = new Team(newTeamId, team1->getPoints() + team2->getPoints());
+		shared_ptr<Team> newTeam = shared_ptr<Team>(new Team(newTeamId, team1->getPoints() + team2->getPoints()));
 		newTeam->setPlayersNum(team1->getPlayersNum() + team2->getPlayersNum());
 		newTeam->addGoalKeepers(team1->getGoalKeepers() + team2->getGoalKeepers());
 		newTeam->addTotalGoals(team1->getTotalGoals() + team2->getTotalGoals());

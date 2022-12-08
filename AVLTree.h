@@ -182,7 +182,7 @@ class AVLTree {
             return newRoot;
         }
 
-        static TreeNode<T, S>* insertHelper(TreeNode<T, S>* root, T* data, const S& key) {
+        static TreeNode<T, S>* insertHelper(TreeNode<T, S>* root, shared_ptr<T> data, const S& key) {
             if(root == nullptr) {
                 return new TreeNode<T, S>(data, key);
             }
@@ -274,7 +274,7 @@ class AVLTree {
         int getSize() const;
         AVLTree();
         ~AVLTree();
-        void insert(T* data, const S& key);
+        void insert(shared_ptr<T> data, const S& key);
         void remove(const S& key);
         TreeNode<T, S>* findNode(const S& key);
         TreeNode<T, S>* findPredecessor(const S& key);
@@ -317,7 +317,7 @@ AVLTree<T, S>::~AVLTree() {
 }
 
 template<class T, class S>
-void AVLTree<T, S>::insert(T* data, const S& key) {
+void AVLTree<T, S>::insert(shared_ptr<T> data, const S& key) {
     this->root = insertHelper(this->root, data, key);
     this->size++;
 }
@@ -341,7 +341,7 @@ TreeNode<T, S>* AVLTree<T, S>::findPredecessor(const S& key){   // find predeces
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* pre = nullptr;
-    while (curr != nullptr || key == curr->key) {
+    while (curr != nullptr && key != curr->key) {
         if (key > curr->key) {
             pre = curr;
             curr = curr->right;
@@ -361,7 +361,7 @@ TreeNode<T, S>* AVLTree<T, S>::findSuccessor(const S& key){ // find successor of
     }
     TreeNode<T, S>* curr = this->root;
     TreeNode<T, S>* succ = nullptr;
-    while (curr != nullptr || key == curr->key) {
+    while (curr != nullptr && key != curr->key) {
         if (key < curr->key){
             succ = curr;
             curr = curr->left;

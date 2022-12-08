@@ -41,4 +41,8 @@ friend bool operator==(const Stats& l, const Stats& r) {
     return l.goals == r.goals && l.cards == r.cards && l.playerId == r.playerId;
 }
 
+friend bool operator!=(const Stats& l, const Stats& r) {
+    return !(l == r);
+}
+
 };

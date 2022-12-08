@@ -15,7 +15,7 @@ public:
     int height;
 
     TreeNode();
-    TreeNode(T* data, const S& key);
+    TreeNode(shared_ptr<T> data, const S& key);
     TreeNode(const TreeNode& other);
     ~TreeNode() = default;
     TreeNode& operator=(const TreeNode& other);
@@ -31,8 +31,13 @@ TreeNode<T, S>::TreeNode():
     height(1)
 {}
 
+/*template <class T, class S>
+TreeNode<T, S>::~TreeNode() {
+    delete this->data;
+}*/
+
 template <class T, class S>
-TreeNode<T, S>::TreeNode(T* data, const S& key):
+TreeNode<T, S>::TreeNode(shared_ptr<T> data, const S& key):
     data(data),
     key(key),
     left(nullptr),

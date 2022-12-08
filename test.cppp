@@ -85,7 +85,8 @@ int main() {
                 //cin>>x;
                 auto random_integer = uni(rng);
                 x = random_integer;
-                int * y = new int(x);
+                //int * y = new int(x);
+                shared_ptr<int> y = shared_ptr<int>(new int(x));
                 (chooseTree == 1) ? a.insert(y, x) : b.insert(y, x);
                 break;
             }
