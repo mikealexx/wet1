@@ -50,6 +50,7 @@ class Player {
         void setPre(shared_ptr<Player> player);
         void setSucc(shared_ptr<Player> player);
         void updateStats(int gamesPlayed, int scoredGoals, int cardsReceived);
+        void destruct();
 };
 
 #endif

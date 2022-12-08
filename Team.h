@@ -27,7 +27,7 @@ class Team {
     public:
         Team() = delete;
         Team(int id, int points);
-        ~Team();
+        ~Team() = default;
 
         int getID() const;
         int getGamesPlayed() const;
@@ -48,6 +48,7 @@ class Team {
         bool isKosher() const;
         AVLTree<Player, int>* getPlayersById() const;
         AVLTree<Player, Stats>* getPlayersByStats() const;
+        void destruct();
 };
 
 #endif

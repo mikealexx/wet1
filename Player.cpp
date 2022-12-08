@@ -94,3 +94,5 @@ void Player::updateStats(int gamesPlayed, int scoredGoals, int cardsReceived) {
     this->goals += scoredGoals;
     this->cards += cardsReceived;
 }
+
+void Player::destruct(){}

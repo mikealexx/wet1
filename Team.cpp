@@ -14,11 +14,6 @@ Team::Team(int id, int points):
     playersByStats = new AVLTree<Player, Stats>();
 }
 
-Team::~Team() {
-    delete this->playersById;
-    delete this->playersByStats;
-}
-
 int Team::getID() const{
     return this->id;
 }
@@ -93,4 +88,9 @@ AVLTree<Player, int>* Team::getPlayersById() const{
 
 AVLTree<Player, Stats>* Team::getPlayersByStats() const{
     return this->playersByStats;
+}
+
+void Team::destruct(){
+    this->playersById->destruct(this->playersById->root);
+    this->playersByStats->destruct(this->playersByStats->root);
 }

@@ -30,10 +30,12 @@ TreeNode<T, S>::TreeNode():
     height(1)
 {}
 
-/*template <class T, class S>
+/*
+template <class T, class S>
 TreeNode<T, S>::~TreeNode() {
-    delete this->data;
-}*/
+    this->data.reset();
+}
+*/
 
 template <class T, class S>
 TreeNode<T, S>::TreeNode(shared_ptr<T> data, const S& key):

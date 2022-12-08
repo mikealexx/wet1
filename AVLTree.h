@@ -34,15 +34,6 @@ class AVLTree {
             return AVLTree::height(node->left) - AVLTree::height(node->right);
         }
 
-        //helper function for the D'CTOR
-        static void destruct(TreeNode<T, S>* node){
-            if (node != nullptr) {
-                destruct(node->left);
-                destruct(node->right);
-                delete node;
-            }
-        }
-
         //rebalance the tree using rotations
         static TreeNode<T, S>* balanceTree(TreeNode<T, S>* root) {
             if(root == nullptr) {
@@ -297,6 +288,18 @@ class AVLTree {
             delete[] arr1;
             delete[] arr2;
             delete[] arr3;
+        }
+
+        //helper function for the D'CTOR
+        static void destruct(TreeNode<T, S>* node){
+            if (node != nullptr) {
+                destruct(node->left);
+                destruct(node->right);
+                if(node->data != nullptr) {
+                    node->data->destruct();
+                }
+                delete node;
+            }
         }
 };
 

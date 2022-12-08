@@ -1,0 +1,349 @@
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+add_player: SUCCESS
+unite_teams: FAILURE
+get_all_players_count: SUCCESS, 6
+get_all_players_count: SUCCESS, 3
+remove_team: FAILURE
+play_match: FAILURE
+get_closest_player: SUCCESS, 103
+remove_team: FAILURE
+get_team_points: SUCCESS, 602
+play_match: FAILURE
+update_player_stats: SUCCESS
+get_all_players: SUCCESS
+33
+50
+26
+181
+31
+105
+198
+147
+95
+152
+get_num_played_games: SUCCESS, 2980
+play_match: FAILURE
+get_closest_player: SUCCESS, 5
+get_all_players_count: SUCCESS, 6
+get_team_points: SUCCESS, 10615
+update_player_stats: SUCCESS
+get_closest_player: SUCCESS, 28
+get_team_points: SUCCESS, 7482
+remove_team: FAILURE
+update_player_stats: SUCCESS
+play_match: FAILURE
+remove_team: FAILURE
+get_all_players_count: SUCCESS, 10
+play_match: FAILURE
+unite_teams: SUCCESS
+play_match: FAILURE
+get_all_players_count: SUCCESS, 13
+get_all_players: SUCCESS
+144
+12
+176
+182
+60
+45
+play_match: FAILURE
+update_player_stats: SUCCESS
+get_all_players: SUCCESS
+199
+80
+36
+103
+165
+75
+53
+get_all_players: SUCCESS
+83
+145
+89
+123
+109
+update_player_stats: SUCCESS
+get_closest_player: SUCCESS, 111
+get_top_scorer: SUCCESS, 153
+remove_team: FAILURE
+get_closest_player: SUCCESS, 90
+get_closest_player: SUCCESS, 134
+get_all_players: SUCCESS
+33
+50
+26
+181
+31
+105
+198
+147
+95
+152
+add_team: FAILURE
+get_all_players: SUCCESS
+186
+29
+119
+197
+68
+154
+19
+57
+get_num_played_games: SUCCESS, 7561
+add_player: FAILURE
+play_match: FAILURE
+play_match: FAILURE
+add_team: FAILURE
+remove_player: SUCCESS
+play_match: SUCCESS
+play_match: FAILURE
+add_team: FAILURE
+get_closest_player: SUCCESS, 30
+remove_player: SUCCESS
+get_num_played_games: SUCCESS, 9294
+get_top_scorer: SUCCESS, 70
+get_num_played_games: SUCCESS, 5569
+get_all_players: SUCCESS
+130
+69
+92
+87
+40
+37
+135
+124
+163
+185
+138
+get_num_played_games: SUCCESS, 1582
+get_top_scorer: SUCCESS, 200
+remove_team: FAILURE
+get_num_played_games: SUCCESS, 8270
+remove_player: SUCCESS
+update_player_stats: SUCCESS
+play_match: FAILURE
+update_player_stats: SUCCESS
+remove_team: FAILURE
+unite_teams: FAILURE
+play_match: SUCCESS
+add_team: FAILURE
+update_player_stats: SUCCESS
+update_player_stats: SUCCESS
+get_team_points: SUCCESS, 10632
