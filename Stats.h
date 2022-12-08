@@ -21,7 +21,7 @@ friend bool operator<(const Stats& l, const Stats& r) {
         return true;
     }
     else if (l.goals == r.goals) {
-        if (l.cards < r.cards) {
+        if (l.cards > r.cards) {
             return true;
         }
         else if (l.cards == r.cards) {

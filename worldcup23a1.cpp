@@ -75,40 +75,42 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 		TreeNode<Player, Stats>* pred = this->playersByStats->findPredecessor(stats);
 		TreeNode<Player, Stats>* succ = this->playersByStats->findSuccessor(stats);
 		if(pred != nullptr) {
-			playerNode->data->setPre(pred->data);
+			player->setPre(pred->data);
 		}
 		else {
-			playerNode->data->setPre(nullptr);
+			player->setPre(nullptr);
 		}
 		if(succ != nullptr) {
-			playerNode->data->setSucc(succ->data);
+			player->setSucc(succ->data);
 		}
 		else {
-			playerNode->data->setSucc(nullptr);
+			player->setSucc(nullptr);
 		}
-		shared_ptr<Player> pre = playerNode->data->getPre();
-		shared_ptr<Player> suc = playerNode->data->getSucc();
+		shared_ptr<Player> pre = player->getPre();
+		shared_ptr<Player> suc = player->getSucc();
 		if(pre != nullptr) {
-			pre->setSucc(playerNode->data);
+			pre->setSucc(player);
 		}
-		//playerNode->data->getPre()->setSucc(playerNode->data);
+		
 		if(suc != nullptr) {
 			suc->setPre(playerNode->data);
 		}
-		//playerNode->data->getSucc()->setPre(playerNode->data);
+		
 		player->getTeam()->getPlayersById()->insert(player, playerId);
 		player->getTeam()->getPlayersByStats()->insert(player, stats);
-		team->addTotalCards(player->getCards());
-		team->addTotalGoals(player->getGoals());
+		team->addTotalCards(cards);
+		team->addTotalGoals(goals);
+		
 		if (!isKosher && team->isKosher()){ // Team was not kosher and now is add to kosher trees
 			this->kosherTeams->insert(team, teamId);
 		}
-		if(player->getTeam()->getTopScorer() == nullptr || goals > player->getTeam()->getTopScorer()->getGoals()) { 
-			player->getTeam()->setTopScorer(playerNode->data);
+		if(player->getTeam()->getTopScorer() == nullptr || stats > player->getTeam()->getTopScorer()->getStats()) { 
+			player->getTeam()->setTopScorer(player);
 		}
-		if(this->topScorer == nullptr || goals > this->topScorer->getGoals()) {
-			this->topScorer = playerNode->data;
+		if(this->topScorer == nullptr || stats > this->topScorer->getStats()) {
+			this->topScorer = player;
 		}
+		
 		team->addPlayersNum(1);
 	}
 	catch (const std::bad_alloc& e) {
@@ -167,9 +169,64 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 	try {
 		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
 		shared_ptr<Team> team = player->getTeam();
+		Stats stats = player->getStats();
+
+		this->playersByStats->remove(stats);
+		team->getPlayersByStats()->remove(stats);
+
 		player->updateStats(gamesPlayed, scoredGoals, cardsReceived);
-		team->addTotalCards(cardsReceived); //remove player's cards from team's total cards count
-		team->addTotalGoals(scoredGoals); //remove player's goals from team's total goals count
+		Stats newStats = player->getStats();
+		
+		team->addTotalCards(cardsReceived); //add player's cards to team's total cards count
+		team->addTotalGoals(scoredGoals); //add player's goals to team's total goals count
+
+		if(player->getTeam()->getTopScorer() == nullptr || newStats > player->getTeam()->getTopScorer()->getStats()) { 
+			player->getTeam()->setTopScorer(player);
+		}
+		if(this->topScorer == nullptr || stats > this->topScorer->getStats()) {
+			this->topScorer = player;
+		}
+		
+
+		team->getPlayersByStats()->insert(player, newStats);
+		this->playersByStats->insert(player, newStats);
+
+		shared_ptr<Player> pred = player->getPre();
+		shared_ptr<Player> succ = player->getSucc();
+		TreeNode<Player, Stats>* newPredNode = this->playersByStats->findPredecessor(newStats);
+		TreeNode<Player, Stats>* newSuccNode = this->playersByStats->findSuccessor(newStats);
+		shared_ptr<Player> newPred;
+		shared_ptr<Player> newSucc; 
+		if(newPredNode != nullptr){
+			newPred = newPredNode->data;
+		}
+		else{
+			newPred = nullptr;
+		}
+		if(newSuccNode != nullptr){
+			newSucc = newSuccNode->data;
+		}
+		else{
+			newSucc = nullptr;
+		}
+
+		if (pred != newPred){
+			if (pred == nullptr)
+				succ->setPre(nullptr);
+			else if(succ == nullptr)
+				pred->setPre(nullptr);
+			else{
+				pred->setSucc(succ);
+				succ->setPre(pred);
+			}
+			player->setPre(newPred);
+			player->setSucc(newSucc);
+			if(newPred != nullptr)
+				newPred->setSucc(player);
+			if(newSucc != nullptr)
+				newSucc->setPre(player);
+			
+		}
 	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
