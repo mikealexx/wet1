@@ -244,7 +244,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 
 StatusType world_cup_t::play_match(int teamId1, int teamId2)
 {
-	if(teamId1 <= 0 || teamId2 <= 0) {
+	if(teamId1 <= 0 || teamId2 <= 0 || teamId1 == teamId2) {
 		return StatusType::INVALID_INPUT;
 	}
 	try {
@@ -457,7 +457,7 @@ struct TeamSim {
 };
 
 
-/*static int getCount(TreeNode<Team, int>* root, int low, int high)
+static int getCount(TreeNode<Team, int>* root, int low, int high)
 {
     if (root == nullptr) {
 		return 0;
@@ -479,9 +479,9 @@ struct TeamSim {
  
     // Else do for left child
     else return getCount(root->left, low, high);
-}*/
+}
 
-static int countKosherTeamsId(TreeNode<Team, int>* node, int minId, int maxId, int count) {
+/*static int countKosherTeamsId(TreeNode<Team, int>* node, int minId, int maxId, int count) {
 	if(node == nullptr || (node != nullptr && node->left != nullptr && node->left->key < minId) || (node != nullptr && node->right != nullptr && node->right->key > maxId)) {
 		return count;
 	}
@@ -495,7 +495,7 @@ static int countKosherTeamsId(TreeNode<Team, int>* node, int minId, int maxId, i
 		count = countKosherTeamsId(node->right, minId, maxId, count);
 	}
 	return count;
-}
+}*/
 
 static int fillArrayKosher(TreeNode<Team, int>* node, TeamSim* arr, int i, int minId, int maxId) {
 	if(node == nullptr || (node != nullptr && node->left != nullptr && node->left->key < minId) || (node != nullptr && node->right != nullptr && node->right->key > maxId)) {
@@ -543,24 +543,34 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 	if (minTeamId < 0 || maxTeamId < 0 || maxTeamId < minTeamId){
 		return output_t<int>(StatusType::INVALID_INPUT);
 	}
-	int size = countKosherTeamsId(this->kosherTeams->root, minTeamId, maxTeamId, 0);
-	TeamSim* arr = new TeamSim[size];
-	TeamSim* teams = new TeamSim;
-	teams->teamId = -1;
-	teams->points = -1;
-	teams->next = nullptr;
-	fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
-	TeamSim* curr = teams;
-	for(int i=0; i<size; i++) {
-		TeamSim* newTeam = new TeamSim;
-		newTeam->teamId = arr[i].teamId;
-		newTeam->points = arr[i].points;
-		newTeam->next = nullptr;
-		curr->next = newTeam;
-		curr = curr->next;
+	try{
+		int size = getCount(this->kosherTeams->root, minTeamId, maxTeamId);//countKosherTeamsId(this->kosherTeams->root, minTeamId, maxTeamId, 0);
+		if(size == 0){
+			return output_t<int>(StatusType::FAILURE);
+		}
+		TeamSim* arr = new TeamSim[size];
+		TeamSim* teams = new TeamSim;
+		teams->teamId = -1;
+		teams->points = -1;
+		teams->next = nullptr;
+		fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
+		TeamSim* curr = teams;
+		for(int i=0; i<size; i++) {
+			TeamSim* newTeam = new TeamSim;
+			newTeam->teamId = arr[i].teamId;
+			newTeam->points = arr[i].points;
+			newTeam->next = nullptr;
+			curr->next = newTeam;
+			curr = curr->next;
+		}
+		while(teams->next->next != nullptr){
+			playGames(teams);
+		}
+		return output_t<int>(teams->next->teamId);
 	}
-	while(teams->next->next != nullptr){
-		playGames(teams);
+	catch(const exception& e){
+		return output_t<int>(StatusType::FAILURE);
 	}
-	return output_t<int>(teams->next->teamId);
+
+	return 2;
 }
