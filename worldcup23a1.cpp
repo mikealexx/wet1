@@ -71,41 +71,34 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 		Stats stats = player->getStats();
 		this->playersById->insert(player, playerId);
 		this->playersByStats->insert(player, stats);
-		TreeNode<Player, Stats>* playerNode = this->playersByStats->findNode(stats);
+		
 		TreeNode<Player, Stats>* pred = this->playersByStats->findPredecessor(stats);
 		TreeNode<Player, Stats>* succ = this->playersByStats->findSuccessor(stats);
 		if(pred != nullptr) {
 			player->setPre(pred->data);
+			pred->data->setSucc(player);
 		}
 		else {
 			player->setPre(nullptr);
 		}
 		if(succ != nullptr) {
 			player->setSucc(succ->data);
+			succ->data->setPre(player);
 		}
 		else {
 			player->setSucc(nullptr);
 		}
-		shared_ptr<Player> pre = player->getPre();
-		shared_ptr<Player> suc = player->getSucc();
-		if(pre != nullptr) {
-			pre->setSucc(player);
-		}
 		
-		if(suc != nullptr) {
-			suc->setPre(playerNode->data);
-		}
-		
-		player->getTeam()->getPlayersById()->insert(player, playerId);
-		player->getTeam()->getPlayersByStats()->insert(player, stats);
+		team->getPlayersById()->insert(player, playerId);
+		team->getPlayersByStats()->insert(player, stats);
 		team->addTotalCards(cards);
 		team->addTotalGoals(goals);
 		
-		if (!isKosher && team->isKosher()){ // Team was not kosher and now is add to kosher trees
+		if (!isKosher && team->isKosher()){ // Team was not kosher and now is - add to kosher tree
 			this->kosherTeams->insert(team, teamId);
 		}
-		if(player->getTeam()->getTopScorer() == nullptr || stats > player->getTeam()->getTopScorer()->getStats()) { 
-			player->getTeam()->setTopScorer(player);
+		if(team->getTopScorer() == nullptr || stats > team->getTopScorer()->getStats()) { 
+			team->setTopScorer(player);
 		}
 		if(this->topScorer == nullptr || stats > this->topScorer->getStats()) {
 			this->topScorer = player;
@@ -136,7 +129,7 @@ StatusType world_cup_t::remove_player(int playerId)
 			this->topScorer = player->getPre();
 		}
 		if(team->getTopScorer() == player) {
-			TreeNode<Player, Stats>* pred = this->playersByStats->findPredecessor(player->getStats());
+			TreeNode<Player, Stats>* pred = team->getPlayersByStats()->findPredecessor(player->getStats());
 			if(pred != nullptr) {
 				team->setTopScorer(pred->data);
 			}
@@ -158,7 +151,7 @@ StatusType world_cup_t::remove_player(int playerId)
 		team->addTotalCards(-(player->getCards())); //add player's cards to team's total cards count
 		team->addTotalGoals(-(player->getGoals())); //add player's goals to team's total goals count
 		team->addPlayersNum(-1);
-		if(isKosher && !team->isKosher()) { // If was kosher and now not remove from kosher trees
+		if(isKosher && !team->isKosher()) { // If was kosher and now not - remove from kosher tree
 			this->kosherTeams->remove(team->getID());
 		}
 	}
@@ -188,13 +181,12 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 		team->addTotalCards(cardsReceived); //add player's cards to team's total cards count
 		team->addTotalGoals(scoredGoals); //add player's goals to team's total goals count
 
-		if(player->getTeam()->getTopScorer() == nullptr || newStats > player->getTeam()->getTopScorer()->getStats()) { 
-			player->getTeam()->setTopScorer(player);
+		if(team->getTopScorer() == nullptr || newStats > team->getTopScorer()->getStats()) { 
+			team->setTopScorer(player);
 		}
-		if(this->topScorer == nullptr || stats > this->topScorer->getStats()) {
+		if(this->topScorer == nullptr || newStats > this->topScorer->getStats()) {
 			this->topScorer = player;
 		}
-		
 
 		team->getPlayersByStats()->insert(player, newStats);
 		this->playersByStats->insert(player, newStats);
@@ -203,19 +195,13 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 		shared_ptr<Player> succ = player->getSucc();
 		TreeNode<Player, Stats>* newPredNode = this->playersByStats->findPredecessor(newStats);
 		TreeNode<Player, Stats>* newSuccNode = this->playersByStats->findSuccessor(newStats);
-		shared_ptr<Player> newPred;
-		shared_ptr<Player> newSucc; 
+		shared_ptr<Player> newPred = nullptr;
+		shared_ptr<Player> newSucc = nullptr; 
 		if(newPredNode != nullptr){
 			newPred = newPredNode->data;
 		}
-		else{
-			newPred = nullptr;
-		}
 		if(newSuccNode != nullptr){
 			newSucc = newSuccNode->data;
-		}
-		else{
-			newSucc = nullptr;
 		}
 
 		if (pred != newPred){
@@ -233,7 +219,6 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 				newPred->setSucc(player);
 			if(newSucc != nullptr)
 				newSucc->setPre(player);
-			
 		}
 	}
 	catch(const std::exception& e) {
@@ -248,11 +233,11 @@ StatusType world_cup_t::play_match(int teamId1, int teamId2)
 		return StatusType::INVALID_INPUT;
 	}
 	try {
-		shared_ptr<Team> team1 = this->teams->findNode(teamId1)->data;
-		shared_ptr<Team> team2 = this->teams->findNode(teamId2)->data;
-		if(team1->getPlayersNum() < 11 || team1->getGoalKeepers() < 1 || team2->getPlayersNum() < 11 || team2->getGoalKeepers() < 1) {
+		shared_ptr<Team> team1 = this->kosherTeams->findNode(teamId1)->data;
+		shared_ptr<Team> team2 = this->kosherTeams->findNode(teamId2)->data;
+		/*if(team1->getPlayersNum() < 11 || team1->getGoalKeepers() < 1 || team2->getPlayersNum() < 11 || team2->getGoalKeepers() < 1) {
 			return StatusType::FAILURE;
-		}
+		}*/
 		int team1GameScore = team1->getPoints() + team1->getTotalGoals() - team1->getTotalCards();
 		int team2GameScore = team2->getPoints() + team2->getTotalGoals() - team2->getTotalCards();
 		if(team1GameScore > team2GameScore) { //team1 wins

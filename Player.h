@@ -33,6 +33,7 @@ class Player {
         int getTeamId() const;
         shared_ptr<Team> getTeam() const;
         int getGamesPlayed() const;
+        int gamesWithoutTeam() const;
         int getGoals() const;
         int getCards() const;
         Stats getStats() const;
@@ -42,7 +43,7 @@ class Player {
 
         void setId(const int id);
         void setTeamId(const int teamId);
-        void setTeam(Team* myTeam);
+        void setTeam(shared_ptr<Team> myTeam);
         void addGamesPlayed(const int gamesPlayed);
         void addGoals(const int goals);
         void addCards(const int cards);

@@ -28,6 +28,10 @@ int Player::getGamesPlayed() const {
     return this->gamesPlayed + this->team->getGamesPlayed();
 }
 
+int Player::gamesWithoutTeam() const {
+    return this->gamesPlayed;
+}
+
 int Player::getGoals() const {
     return this->goals;
 }
@@ -61,8 +65,8 @@ void Player::setTeamId(const int teamId) {
     this->teamId = teamId;
 }
 
-void Player::setTeam(Team* myTeam) {
-    this->team = shared_ptr<Team>(myTeam);
+void Player::setTeam(shared_ptr<Team> myTeam) {
+    this->team = myTeam;
 }
 
 void Player::addGamesPlayed(const int gamesPlayed) {
