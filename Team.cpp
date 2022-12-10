@@ -78,8 +78,16 @@ void Team::setTopScorer(shared_ptr<Player> player) {
     this->topScorer = player;
 }
 
+shared_ptr<Team> Team::getNextKosher() const{
+    return this->nextKosher;
+}
+
+void Team::setNextKosher(shared_ptr<Team> team){
+    this->nextKosher = team;
+}
+
 bool Team::isKosher() const {
-    return (this->getPlayersNum() >=11 && this->getGoalKeepers() >= 1);
+    return (this->getPlayersNum() >= 11 && this->getGoalKeepers() >= 1);
 }
 
 AVLTree<Player, int>* Team::getPlayersById() const{

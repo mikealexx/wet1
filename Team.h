@@ -20,6 +20,7 @@ class Team {
         int totalCards;
         int totalGoals;
         shared_ptr<Player> topScorer;
+        shared_ptr<Team> nextKosher;
         AVLTree<Player, int>* playersById;
         AVLTree<Player, Stats>* playersByStats;
 
@@ -45,6 +46,8 @@ class Team {
         void setPlayersNum(int players);
         shared_ptr<Player> getTopScorer() const;
         void setTopScorer(shared_ptr<Player> player);
+        shared_ptr<Team> getNextKosher() const;
+        void setNextKosher(shared_ptr<Team> team);
         bool isKosher() const;
         AVLTree<Player, int>* getPlayersById() const;
         AVLTree<Player, Stats>* getPlayersByStats() const;
