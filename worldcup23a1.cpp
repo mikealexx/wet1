@@ -233,11 +233,11 @@ StatusType world_cup_t::play_match(int teamId1, int teamId2)
 		return StatusType::INVALID_INPUT;
 	}
 	try {
-		shared_ptr<Team> team1 = this->kosherTeams->findNode(teamId1)->data;
-		shared_ptr<Team> team2 = this->kosherTeams->findNode(teamId2)->data;
-		/*if(team1->getPlayersNum() < 11 || team1->getGoalKeepers() < 1 || team2->getPlayersNum() < 11 || team2->getGoalKeepers() < 1) {
+		shared_ptr<Team> team1 = this->teams->findNode(teamId1)->data;
+		shared_ptr<Team> team2 = this->teams->findNode(teamId2)->data;
+		if(team1->getPlayersNum() < 11 || team1->getGoalKeepers() < 1 || team2->getPlayersNum() < 11 || team2->getGoalKeepers() < 1) {
 			return StatusType::FAILURE;
-		}*/
+		}
 		int team1GameScore = team1->getPoints() + team1->getTotalGoals() - team1->getTotalCards();
 		int team2GameScore = team2->getPoints() + team2->getTotalGoals() - team2->getTotalCards();
 		if(team1GameScore > team2GameScore) { //team1 wins
@@ -332,13 +332,11 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 			currPlayer = arr1[i]->data;
 			currPlayer->addGamesPlayed(currPlayer->getGamesPlayed() - currPlayer->gamesWithoutTeam());
 			currPlayer->setTeam(newTeam);
-			currPlayer->addGamesPlayed(-newTeam->getGamesPlayed());
 		}
 		for (int i=0; i<arr2_size; i++){
 			currPlayer = arr2[i]->data;
 			currPlayer->addGamesPlayed(currPlayer->getGamesPlayed() - currPlayer->gamesWithoutTeam());
 			currPlayer->setTeam(newTeam);
-			currPlayer->addGamesPlayed(-newTeam->getGamesPlayed());
 		}
 		AVLTree<Player, int>::merge(*team1->getPlayersById(), *team2->getPlayersById(), *newTeam->getPlayersById()); //merge player tree by id
 		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
@@ -556,39 +554,33 @@ static void playGames(TeamSim* teams){
 	}
 }
 
-output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
-{
+output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId){
 	if (minTeamId < 0 || maxTeamId < 0 || maxTeamId < minTeamId){
 		return output_t<int>(StatusType::INVALID_INPUT);
 	}
-	try{
-		int size = getCount(this->kosherTeams->root, minTeamId, maxTeamId);//countKosherTeamsId(this->kosherTeams->root, minTeamId, maxTeamId, 0);
-		if(size == 0){
-			return output_t<int>(StatusType::FAILURE);
-		}
-		TeamSim* arr = new TeamSim[size];
-		TeamSim* teams = new TeamSim;
-		teams->teamId = -1;
-		teams->points = -1;
-		teams->next = nullptr;
-		fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
-		TeamSim* curr = teams;
-		for(int i=0; i<size; i++) {
-			TeamSim* newTeam = new TeamSim;
-			newTeam->teamId = arr[i].teamId;
-			newTeam->points = arr[i].points;
-			newTeam->next = nullptr;
-			curr->next = newTeam;
-			curr = curr->next;
-		}
-		while(teams->next->next != nullptr){
-			playGames(teams);
-		}
-		return output_t<int>(teams->next->teamId);
-	}
-	catch(const exception& e){
+	
+	int size = getCount(this->kosherTeams->root, minTeamId, maxTeamId);//countKosherTeamsId(this->kosherTeams->root, minTeamId, maxTeamId, 0);
+	if(size == 0){
 		return output_t<int>(StatusType::FAILURE);
 	}
-
-	return 2;
+	TeamSim* arr = new TeamSim[size];
+	TeamSim* teams = new TeamSim;
+	teams->teamId = -1;
+	teams->points = -1;
+	teams->next = nullptr;
+	fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
+	TeamSim* curr = teams;
+	for(int i=0; i<size; i++) {
+		TeamSim* newTeam = new TeamSim;
+		newTeam->teamId = arr[i].teamId;
+		newTeam->points = arr[i].points;
+		newTeam->next = nullptr;
+		curr->next = newTeam;
+		curr = curr->next;
+	}
+	while(teams->next->next != nullptr){
+		playGames(teams);
+	}
+	return output_t<int>(teams->next->teamId);
+	
 }
