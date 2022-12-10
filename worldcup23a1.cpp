@@ -106,6 +106,9 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 			if(teamSucc != nullptr){
 				team->setNextKosher(teamSucc->data);
 			}
+			else{
+				team->setNextKosher(nullptr);
+			}
 		}
 		if(team->getTopScorer() == nullptr || stats > team->getTopScorer()->getStats()) { 
 			team->setTopScorer(player);
@@ -355,24 +358,27 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 		}
 		AVLTree<Player, int>::merge(*team1->getPlayersById(), *team2->getPlayersById(), *newTeam->getPlayersById()); //merge player tree by id
 		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
-		this->teams->remove(teamId1);
+		
 		if(team1->isKosher()){
 			TreeNode<Team, int>* team1Pre = this->kosherTeams->findPredecessor(team1->getID());
 			if(team1Pre != nullptr){
 				team1Pre->data->setNextKosher(team1->getNextKosher());
 			}
-			this->kosherTeams->remove(teamId1);
 			team1->setNextKosher(nullptr);
+			this->kosherTeams->remove(teamId1);
 		}
-		this->teams->remove(teamId2);
+		
 		if(team2->isKosher()){
 			TreeNode<Team, int>* team2Pre = this->kosherTeams->findPredecessor(team2->getID());
 			if(team2Pre != nullptr){
 				team2Pre->data->setNextKosher(team2->getNextKosher());
 			}
-			this->kosherTeams->remove(teamId2);
 			team2->setNextKosher(nullptr);
+			this->kosherTeams->remove(teamId2);
 		}
+
+		this->teams->remove(teamId1);
+		this->teams->remove(teamId2);
 		this->teams->insert(newTeam, newTeamId);
 		if (newTeam->isKosher()){
 			this->kosherTeams->insert(newTeam, newTeamId);
@@ -383,6 +389,9 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 			}
 			if(newTeamSucc != nullptr){
 				newTeam->setNextKosher(newTeamSucc->data);
+			}
+			else{
+				newTeam->setNextKosher(nullptr);
 			}
 		}
 	}
@@ -511,7 +520,6 @@ struct TeamSim {
 	int teamId;
 	int points;
 	struct TeamSim* next;
-	//struct TeamSim* prev;
 };
 
 
@@ -584,7 +592,7 @@ static TreeNode<Team, int>* findMinInRange(TreeNode<Team, int>* root, int low, i
 		}
 	}
 
-	while(curr != nullptr && curr->key >= low){ //Find smallest in range
+	while(curr != nullptr && curr->key >= low && curr->key <= high){ //Find smallest in range
 		if(curr->left == nullptr || curr->left-> key < low){
 			return curr;
 		}
@@ -598,19 +606,23 @@ static void playGames(TeamSim* teams){
 	TeamSim* curr = teams;
 	while(curr->next != nullptr && curr->next->next != nullptr){
 		if (curr->next->points > curr->next->next->points){
-			curr->next->points += (3 + curr->next->next->points);
+			curr->next->points += 3;
+			curr->next->points += curr->next->next->points;
 			curr->next->next = curr->next->next->next;
 		}
 		else if (curr->next->points < curr->next->next->points){
-			curr->next->next->points += (3 + curr->next->points);
+			curr->next->next->points += 3;
+			curr->next->next->points += curr->next->points;
 			curr->next = curr->next->next;
 		}
 		else if (curr->next->teamId > curr->next->next->teamId){
-			curr->next->points += (3 + curr->next->next->points);
+			curr->next->points += 3;
+			curr->next->points += curr->next->next->points;
 			curr->next->next = curr->next->next->next;
 		}
 		else{
-			curr->next->next->points += (3 + curr->next->points);
+			curr->next->next->points += 3;
+			curr->next->next->points += curr->next->points;;
 			curr->next = curr->next->next;
 		}
 		curr = curr->next;

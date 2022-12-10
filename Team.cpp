@@ -8,7 +8,8 @@ Team::Team(int id, int points):
     goalKeepers(0),
     totalCards(0),
     totalGoals(0),
-    topScorer(nullptr)
+    topScorer(nullptr),
+    nextKosher(nullptr)
 {
     playersById = new AVLTree<Player, int>();
     playersByStats = new AVLTree<Player, Stats>();
