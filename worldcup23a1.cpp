@@ -357,15 +357,33 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
 		this->teams->remove(teamId1);
 		if(team1->isKosher()){
+			TreeNode<Team, int>* team1Pre = this->kosherTeams->findPredecessor(team1->getID());
+			if(team1Pre != nullptr){
+				team1Pre->data->setNextKosher(team1->getNextKosher());
+			}
 			this->kosherTeams->remove(teamId1);
+			team1->setNextKosher(nullptr);
 		}
 		this->teams->remove(teamId2);
 		if(team2->isKosher()){
+			TreeNode<Team, int>* team2Pre = this->kosherTeams->findPredecessor(team2->getID());
+			if(team2Pre != nullptr){
+				team2Pre->data->setNextKosher(team2->getNextKosher());
+			}
 			this->kosherTeams->remove(teamId2);
+			team2->setNextKosher(nullptr);
 		}
 		this->teams->insert(newTeam, newTeamId);
 		if (newTeam->isKosher()){
 			this->kosherTeams->insert(newTeam, newTeamId);
+			TreeNode<Team, int>* newTeamPre = this->kosherTeams->findPredecessor(newTeamId);
+			TreeNode<Team, int>* newTeamSucc = this->kosherTeams->findSuccessor(newTeamId);
+			if(newTeamPre != nullptr){
+				newTeamPre->data->setNextKosher(newTeam);
+			}
+			if(newTeamSucc != nullptr){
+				newTeam->setNextKosher(newTeamSucc->data);
+			}
 		}
 	}
 	catch(const std::bad_alloc& e) {
@@ -620,7 +638,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId){
 	while(curr != nullptr && curr->getID() <= maxTeamId){
 		TeamSim* newTeam = new TeamSim;
 		newTeam->teamId = curr->getID();
-		newTeam->points = curr->getPoints();
+		newTeam->points = curr->getPoints() + curr->getTotalGoals() - curr->getTotalCards();
 		newTeam->next = nullptr;
 		currTeamSim->next = newTeam;
 		currTeamSim = currTeamSim->next;
