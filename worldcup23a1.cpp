@@ -307,11 +307,38 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 		newTeam->addGoalKeepers(team1->getGoalKeepers() + team2->getGoalKeepers());
 		newTeam->addTotalGoals(team1->getTotalGoals() + team2->getTotalGoals());
 		newTeam->addTotalCards(team1->getTotalCards() + team2->getTotalCards());
-		if(team1->getTopScorer()->getGoals() > team2->getTopScorer()->getGoals()) {
+		if(team1->getTopScorer() == nullptr){
+			newTeam->setTopScorer(team2->getTopScorer());
+		}
+		else if(team2->getTopScorer() == nullptr){
+			newTeam->setTopScorer(team2->getTopScorer());
+		}
+		else if(team1->getTopScorer()->getGoals() > team2->getTopScorer()->getGoals()) {
 			newTeam->setTopScorer(team1->getTopScorer());
 		}
 		else {
 			newTeam->setTopScorer(team2->getTopScorer());
+		}
+		int arr1_size = team1->getPlayersById()->getSize();
+        int arr2_size = team2->getPlayersById()->getSize();
+        
+        TreeNode<Player, int>** arr1 = new TreeNode<Player, int>* [arr1_size]; //first tree sorted array
+        TreeNode<Player, int>** arr2 = new TreeNode<Player, int>* [arr2_size]; //second tree sorted array
+        
+        team1->getPlayersById()->treeToArray(arr1, team1->getPlayersById()->root, 0);
+        team1->getPlayersById()->treeToArray(arr2, team2->getPlayersById()->root, 0);
+		shared_ptr<Player> currPlayer;
+		for (int i=0; i<arr1_size; i++){
+			currPlayer = arr1[i]->data;
+			currPlayer->addGamesPlayed(currPlayer->getGamesPlayed() - currPlayer->gamesWithoutTeam());
+			currPlayer->setTeam(newTeam);
+			currPlayer->addGamesPlayed(-newTeam->getGamesPlayed());
+		}
+		for (int i=0; i<arr2_size; i++){
+			currPlayer = arr2[i]->data;
+			currPlayer->addGamesPlayed(currPlayer->getGamesPlayed() - currPlayer->gamesWithoutTeam());
+			currPlayer->setTeam(newTeam);
+			currPlayer->addGamesPlayed(-newTeam->getGamesPlayed());
 		}
 		AVLTree<Player, int>::merge(*team1->getPlayersById(), *team2->getPlayersById(), *newTeam->getPlayersById()); //merge player tree by id
 		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
@@ -418,13 +445,19 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 		shared_ptr<Player> succ = playerNode->getSucc();
 		Stats playerStats = playerNode->getStats();
 		int closest;
-		if(pre == nullptr && succ != nullptr) {
-			Stats succStats = playerNode->getSucc()->getStats();
-			closest = playerStats.getClosest(nullptr, &succStats);
+		if(pre == nullptr && succ == nullptr){
+			return output_t<int>(StatusType::FAILURE);
 		}
-		else {
-			Stats preStats = playerNode->getPre()->getStats();
-			closest = playerStats.getClosest(&preStats, nullptr);
+		else if(pre == nullptr) {
+			closest = succ->getId();
+		}
+		else if(succ == nullptr) {
+			closest = pre->getId();
+		}
+		else{
+			Stats preStats = pre->getStats();
+			Stats succStats = succ->getStats();
+			closest = playerStats.getClosest(&preStats, &succStats);
 		}
 		return output_t<int>(closest);
 	}

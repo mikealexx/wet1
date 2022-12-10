@@ -209,20 +209,7 @@ class AVLTree {
             return root;
         }
 
-        static int treeToArray(TreeNode<T, S>* array[], TreeNode<T, S>* root, int i) {
-            if(root == nullptr) {
-                return i;
-            }
-            if(root->left != nullptr) {
-                i = treeToArray(array, root->left, i);
-            }
-            array[i] = root;
-            i++;
-            if(root->right != nullptr) {
-                i = treeToArray(array, root->right, i);
-            }
-            return i;
-        }
+        
 
         static void mergeArrays(TreeNode<T, S> * arr1[], TreeNode<T, S> * arr2[], int arr1_size, int arr2_size, TreeNode<T, S> * arr3[]) {
             int i = 0, j = 0, k = 0;
@@ -300,6 +287,21 @@ class AVLTree {
                 }
                 delete node;
             }
+        }
+
+        static int treeToArray(TreeNode<T, S>* array[], TreeNode<T, S>* root, int i) {
+            if(root == nullptr) {
+                return i;
+            }
+            if(root->left != nullptr) {
+                i = treeToArray(array, root->left, i);
+            }
+            array[i] = root;
+            i++;
+            if(root->right != nullptr) {
+                i = treeToArray(array, root->right, i);
+            }
+            return i;
         }
 };
 
