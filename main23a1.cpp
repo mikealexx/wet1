@@ -37,7 +37,7 @@ int main()
         if (!op.compare("add_team")) {
             cin >> d1 >> d2;
             print(op, obj->add_team(d1, d2));
-        } else if (!op.compare("remove_team")) {
+         } else if (!op.compare("remove_team")) {
             cin >> d1;
             print(op, obj->remove_team(d1));
         } else if (!op.compare("add_player")) {

@@ -583,23 +583,28 @@ struct TeamSim {
 
 static TreeNode<Team, int>* findMinInRange(TreeNode<Team, int>* root, int low, int high){
 	TreeNode<Team, int>* curr = root;
-	while(curr != nullptr && (curr->key < low || curr->key > high)){ //Get to range
+	TreeNode<Team, int>* res = nullptr;
+	while(curr != nullptr){ //Get to range
 		if(curr->key < low){
 			curr = curr->right;
 		}
-		else {
+		else if(curr->key > high) {
 			curr = curr->left;
+		}
+		else{
+			res = curr;
+            curr = curr->left;
 		}
 	}
 
-	while(curr != nullptr && curr->key >= low && curr->key <= high){ //Find smallest in range
+	/*while(curr != nullptr && curr->key >= low && curr->key <= high){ //Find smallest in range
 		if(curr->left == nullptr || curr->left-> key < low){
 			return curr;
 		}
 		curr = curr->left;
-	}
+	}*/
 
-	return nullptr;
+	return res;
 }
 
 static void playGames(TeamSim* teams){
