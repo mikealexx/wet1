@@ -283,10 +283,11 @@ class AVLTree {
                 destruct(node->left);
                 destruct(node->right);
                 if(node->data != nullptr) {
-                    node->data->destruct();
+                    node->data.reset();
                 }
                 delete node;
             }
+            return;
         }
 
         static int treeToArray(TreeNode<T, S>* array[], TreeNode<T, S>* root, int i) {

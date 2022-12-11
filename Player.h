@@ -24,7 +24,7 @@ class Player {
 
     public:
         Player() = default;
-        ~Player() = default;
+        ~Player();
         Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int goals, int cards, bool goalKeeper);
         Player(const Player& other) = default;
         Player& operator=(const Player& other) = default;

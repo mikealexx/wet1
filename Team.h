@@ -28,7 +28,7 @@ class Team {
     public:
         Team() = delete;
         Team(int id, int points);
-        ~Team() = default;
+        ~Team();
 
         int getID() const;
         int getGamesPlayed() const;

@@ -12,6 +12,15 @@ Player::Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int g
     succ(nullptr)
 {}
 
+Player::~Player(){
+    this->succ.reset();
+    this->pre.reset();
+    this->team.reset();
+    this->succ = nullptr;
+    this->pre = nullptr;
+    this->team = nullptr;
+}
+
 int Player::getId() const {
     return this->id;
 }
@@ -99,4 +108,7 @@ void Player::updateStats(int gamesPlayed, int scoredGoals, int cardsReceived) {
     this->cards += cardsReceived;
 }
 
-void Player::destruct(){}
+void Player::destruct(){
+    this->setPre(nullptr);
+    this->setSucc(nullptr);
+}

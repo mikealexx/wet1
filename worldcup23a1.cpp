@@ -356,6 +356,8 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 			currPlayer->addGamesPlayed(currPlayer->getGamesPlayed() - currPlayer->gamesWithoutTeam());
 			currPlayer->setTeam(newTeam);
 		}
+		delete[] arr1;
+		delete[] arr2;
 		AVLTree<Player, int>::merge(*team1->getPlayersById(), *team2->getPlayersById(), *newTeam->getPlayersById()); //merge player tree by id
 		AVLTree<Player, Stats>::merge(*team1->getPlayersByStats(), *team2->getPlayersByStats(), *newTeam->getPlayersByStats()); //merge players tree by stats
 		
@@ -522,65 +524,6 @@ struct TeamSim {
 	struct TeamSim* next;
 };
 
-
-/*static int getCount(TreeNode<Team, int>* root, int low, int high)
-{
-    if (root == nullptr) {
-		return 0;
-	}
-
-    if (root->key == high && root->key == low){
-		return 1;
-	}
- 
-    // If current node is in range, then include it in count and
-    // recur for left and right children of it
-    if (root->key <= high && root->key>= low)
-         return 1 + getCount(root->left, low, high) +
-                    getCount(root->right, low, high);
- 
-    // If current node is smaller than low, then do for right
-    else if (root->key < low)
-         return getCount(root->right, low, high);
- 
-    // Else do for left child
-    else return getCount(root->left, low, high);
-}*/
-
-/*static int countKosherTeamsId(TreeNode<Team, int>* node, int minId, int maxId, int count) {
-	if(node == nullptr || (node != nullptr && node->left != nullptr && node->left->key < minId) || (node != nullptr && node->right != nullptr && node->right->key > maxId)) {
-		return count;
-	}
-	if(node->left != nullptr && node->left->key <= maxId) {
-		count = countKosherTeamsId(node->left, minId, maxId, count);
-	}
-	if(node->key <= maxId && node->key >= minId) {
-		count++;
-	}
-	if(node->right != nullptr) {
-		count = countKosherTeamsId(node->right, minId, maxId, count);
-	}
-	return count;
-}*/
-
-/*static int fillArrayKosher(TreeNode<Team, int>* node, TeamSim* arr, int i, int minId, int maxId) {
-	if(node == nullptr || (node != nullptr && node->left != nullptr && node->left->key < minId) || (node != nullptr && node->right != nullptr && node->right->key > maxId)) {
-		return i;
-	}
-	if(node->left != nullptr) {
-		i = fillArrayKosher(node->left, arr, i, minId, maxId);
-	}
-	if(node->key <= maxId && node->key >= minId) {
-		arr[i].teamId = node->data->getID();
-		arr[i].points = node->data->getPoints() + node->data->getTotalGoals() - node->data->getTotalCards();
-		i++;
-	}
-	if(node->right != nullptr) {
-		i = fillArrayKosher(node->right, arr, i, minId, maxId);
-	}
-	return i;
-}*/
-
 static TreeNode<Team, int>* findMinInRange(TreeNode<Team, int>* root, int low, int high){
 	TreeNode<Team, int>* curr = root;
 	TreeNode<Team, int>* res = nullptr;
@@ -596,14 +539,6 @@ static TreeNode<Team, int>* findMinInRange(TreeNode<Team, int>* root, int low, i
             curr = curr->left;
 		}
 	}
-
-	/*while(curr != nullptr && curr->key >= low && curr->key <= high){ //Find smallest in range
-		if(curr->left == nullptr || curr->left-> key < low){
-			return curr;
-		}
-		curr = curr->left;
-	}*/
-
 	return res;
 }
 
@@ -613,22 +548,30 @@ static void playGames(TeamSim* teams){
 		if (curr->next->points > curr->next->next->points){
 			curr->next->points += 3;
 			curr->next->points += curr->next->next->points;
+			TeamSim* toDelete = curr->next->next;
 			curr->next->next = curr->next->next->next;
+			delete toDelete;
 		}
 		else if (curr->next->points < curr->next->next->points){
 			curr->next->next->points += 3;
 			curr->next->next->points += curr->next->points;
+			TeamSim* toDelete = curr->next;
 			curr->next = curr->next->next;
+			delete toDelete;
 		}
 		else if (curr->next->teamId > curr->next->next->teamId){
 			curr->next->points += 3;
 			curr->next->points += curr->next->next->points;
+			TeamSim* toDelete = curr->next->next;
 			curr->next->next = curr->next->next->next;
+			delete toDelete;
 		}
 		else{
 			curr->next->next->points += 3;
-			curr->next->next->points += curr->next->points;;
+			curr->next->next->points += curr->next->points;
+			TeamSim* toDelete = curr->next;
 			curr->next = curr->next->next;
+			delete toDelete;
 		}
 		curr = curr->next;
 	}
@@ -638,11 +581,6 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId){
 	if (minTeamId < 0 || maxTeamId < 0 || maxTeamId < minTeamId){
 		return output_t<int>(StatusType::INVALID_INPUT);
 	}
-	
-	/*int size = getCount(this->kosherTeams->root, minTeamId, maxTeamId);//countKosherTeamsId(this->kosherTeams->root, minTeamId, maxTeamId, 0);
-	if(size == 0){
-		return output_t<int>(StatusType::FAILURE);
-	}*/
 	TreeNode<Team, int>* minTeamNode = findMinInRange(this->kosherTeams->root, minTeamId, maxTeamId);
 	if(minTeamNode == nullptr){
 		return output_t<int>(StatusType::FAILURE);
@@ -661,26 +599,11 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId){
 		currTeamSim = currTeamSim->next;
 		curr = curr->getNextKosher();
 	}
-
-	/*TeamSim* arr = new TeamSim[size];
-	TeamSim* teams = new TeamSim;
-	teams->teamId = -1;
-	teams->points = -1;
-	teams->next = nullptr;
-	//fillArrayKosher(this->kosherTeams->root, arr, 0, minTeamId, maxTeamId);
-	TeamSim* curr = teams;
-	for(int i=0; i<size; i++) {
-		TeamSim* newTeam = new TeamSim;
-		newTeam->teamId = arr[i].teamId;
-		newTeam->points = arr[i].points;
-		newTeam->next = nullptr;
-		curr->next = newTeam;
-		curr = curr->next;
-	}*/
-
 	while(teams->next->next != nullptr){
 		playGames(teams);
 	}
-	return output_t<int>(teams->next->teamId);
-	
+	int winner = teams->next->teamId;
+	delete teams->next;
+	delete teams;
+	return output_t<int>(winner);
 }
