@@ -12,14 +12,11 @@ Player::Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int g
     succ(nullptr)
 {}
 
-Player::~Player(){
-    this->succ.reset();
-    this->pre.reset();
-    this->team.reset();
+/*Player::~Player(){
     this->succ = nullptr;
     this->pre = nullptr;
     this->team = nullptr;
-}
+}*/
 
 int Player::getId() const {
     return this->id;

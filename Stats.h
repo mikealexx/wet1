@@ -13,6 +13,7 @@ static int abs(int x) {
 Stats(const int goals, const int cards, const int playerId);
 
 Stats();
+~Stats() = default;
 
 int getClosest(Stats* stats1, Stats* stats2);
 

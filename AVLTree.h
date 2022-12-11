@@ -283,7 +283,7 @@ class AVLTree {
                 destruct(node->left);
                 destruct(node->right);
                 if(node->data != nullptr) {
-                    node->data.reset();
+                    //node->data.reset();
                 }
                 delete node;
             }

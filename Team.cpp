@@ -9,10 +9,12 @@ Team::Team(int id, int points):
     totalCards(0),
     totalGoals(0),
     topScorer(nullptr),
-    nextKosher(nullptr)
+    nextKosher(nullptr),
+    playersById(new AVLTree<Player, int>()),
+    playersByStats(new AVLTree<Player, Stats>())
 {
-    playersById = new AVLTree<Player, int>();
-    playersByStats = new AVLTree<Player, Stats>();
+    // playersById = &AVLTree<Player, int>();
+    // playersByStats = &AVLTree<Player, Stats>();
 }
 
 Team::~Team() {
