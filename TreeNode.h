@@ -32,7 +32,7 @@ TreeNode<T, S>::TreeNode():
 
 template <class T, class S>
 TreeNode<T, S>::~TreeNode() {
-    // this->data.reset();
+    delete this->data.get();
     if(this->left != nullptr)
         delete this->left;
     this->left = nullptr;

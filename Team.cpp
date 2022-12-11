@@ -18,7 +18,9 @@ Team::Team(int id, int points):
 }
 
 Team::~Team() {
-    this->setNextKosher(nullptr);
+    //this->setNextKosher(nullptr);
+    delete this->topScorer.get();
+    delete this->nextKosher.get();
     delete (this->playersById);
     delete (this->playersByStats);
 }
