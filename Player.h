@@ -19,8 +19,8 @@ class Player {
         int goals;
         int cards;
         bool goalKeeper;
-        shared_ptr<Player> pre;
-        shared_ptr<Player> succ;
+        weak_ptr<Player> pre;
+        weak_ptr<Player> succ;
         
 
     public:

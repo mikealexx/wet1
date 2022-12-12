@@ -8,8 +8,8 @@ Player::Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int g
     goals(goals), 
     cards(cards), 
     goalKeeper(goalKeeper),
-    pre(nullptr),
-    succ(nullptr)
+    pre(),
+    succ()
 {}
 
 //Player::~Player(){
@@ -59,11 +59,11 @@ bool Player::isGoalKeeper() const {
 }
 
 shared_ptr<Player> Player::getPre() const{
-    return this->pre;
+    return this->pre.lock();
 }
 
 shared_ptr<Player> Player::getSucc() const{
-    return this->succ;
+    return this->succ.lock();
 }
 
 void Player::setId(const int id) {
