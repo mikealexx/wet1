@@ -105,9 +105,8 @@ AVLTree<Player, Stats>* Team::getPlayersByStats() const{
     return this->playersByStats;
 }
 
-/*
+
 void Team::destruct(){
-    this->setNextKosher(nullptr);
-    delete (this->playersById);
-    delete (this->playersByStats);
-} */
+    //delete (this->playersById);
+    //delete (this->playersByStats);
+}
