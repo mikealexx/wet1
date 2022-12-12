@@ -13,10 +13,10 @@ world_cup_t::world_cup_t():
 
 world_cup_t::~world_cup_t()
 {
-	delete this->playersById;
-	delete this->playersByStats;
-	delete this->kosherTeams;
-	delete this->teams;
+//	delete this->playersById;
+//	delete this->playersByStats;
+//	delete this->kosherTeams;
+//	delete this->teams;
 }
 
 

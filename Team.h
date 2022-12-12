@@ -19,7 +19,7 @@ class Team {
         int goalKeepers;
         int totalCards;
         int totalGoals;
-        shared_ptr<Player> topScorer;
+        weak_ptr<Player> topScorer;
         shared_ptr<Team> nextKosher;
         AVLTree<Player, int>* playersById;
         AVLTree<Player, Stats>* playersByStats;

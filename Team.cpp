@@ -8,7 +8,7 @@ Team::Team(int id, int points):
     goalKeepers(0),
     totalCards(0),
     totalGoals(0),
-    topScorer(nullptr),
+    topScorer(),
     nextKosher(nullptr)
 {
     playersById = new AVLTree<Player, int>();
@@ -78,7 +78,7 @@ void Team::setPlayersNum(int players) {
 }
 
 shared_ptr<Player> Team::getTopScorer() const{
-    return this->topScorer;
+    return this->topScorer.lock();
 }
 
 void Team::setTopScorer(shared_ptr<Player> player) {
