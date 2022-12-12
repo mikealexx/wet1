@@ -12,14 +12,14 @@ Player::Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int g
     succ(nullptr)
 {}
 
-Player::~Player(){
-    this->succ.reset();
-    this->pre.reset();
-    this->team.reset();
-    this->succ = nullptr;
-    this->pre = nullptr;
-    this->team = nullptr;
-}
+//Player::~Player(){
+//    this->succ.reset();
+//    this->pre.reset();
+//    this->team.reset();
+//    this->succ = nullptr;
+//    this->pre = nullptr;
+//    this->team = nullptr;
+//}
 
 int Player::getId() const {
     return this->id;
@@ -29,12 +29,12 @@ int Player::getTeamId() const {
     return this->teamId;
 }
 
-shared_ptr<Team> Player::getTeam() const {
+weak_ptr<Team> Player::getTeam() const {
     return this->team;
 }
 
 int Player::getGamesPlayed() const {
-    return this->gamesPlayed + this->team->getGamesPlayed();
+    return this->gamesPlayed + this->team.lock()->getGamesPlayed();
 }
 
 int Player::gamesWithoutTeam() const {

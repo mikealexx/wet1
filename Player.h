@@ -6,6 +6,7 @@
 #include <memory>
 
 using std::shared_ptr;
+using std::weak_ptr;
 
 class Team;
 
@@ -13,7 +14,7 @@ class Player {
     private:
         int id;
         int teamId;
-        shared_ptr<Team> team;
+        weak_ptr<Team> team;
         int gamesPlayed;
         int goals;
         int cards;
@@ -24,14 +25,14 @@ class Player {
 
     public:
         Player() = default;
-        ~Player();
+        ~Player() = default;
         Player(int id, int teamId, shared_ptr<Team> team, int gamesPlayed, int goals, int cards, bool goalKeeper);
         Player(const Player& other) = default;
         Player& operator=(const Player& other) = default;
 
         int getId() const;
         int getTeamId() const;
-        shared_ptr<Team> getTeam() const;
+        weak_ptr<Team> getTeam() const;
         int getGamesPlayed() const;
         int gamesWithoutTeam() const;
         int getGoals() const;

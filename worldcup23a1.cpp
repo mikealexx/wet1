@@ -135,7 +135,7 @@ StatusType world_cup_t::remove_player(int playerId)
 	}
 	try {
 		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
-		shared_ptr<Team> team = player->getTeam();
+		shared_ptr<Team> team = player->getTeam().lock();
 		bool isKosher = team->isKosher();
 		Stats playerStats = player->getStats();
 		if (this->topScorer == player){
@@ -187,7 +187,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 	}
 	try {
 		shared_ptr<Player> player = this->playersById->findNode(playerId)->data;
-		shared_ptr<Team> team = player->getTeam();
+		shared_ptr<Team> team = player->getTeam().lock();
 		Stats stats = player->getStats();
 
 		this->playersByStats->remove(stats);
