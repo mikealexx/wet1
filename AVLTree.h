@@ -209,8 +209,6 @@ class AVLTree {
             return root;
         }
 
-        
-
         static void mergeArrays(TreeNode<T, S> * arr1[], TreeNode<T, S> * arr2[], int arr1_size, int arr2_size, TreeNode<T, S> * arr3[]) {
             int i = 0, j = 0, k = 0;
             while (i < arr1_size && j < arr2_size) {
@@ -282,9 +280,6 @@ class AVLTree {
             if (node != nullptr) {
                 destruct(node->left);
                 destruct(node->right);
-                if(node->data != nullptr) {
-                    //node->data.reset();
-                }
                 delete node;
                 node = nullptr;
             }
