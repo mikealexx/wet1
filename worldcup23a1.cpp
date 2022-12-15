@@ -25,9 +25,12 @@ StatusType world_cup_t::add_team(int teamId, int points)
 	if(teamId <= 0 || points < 0) {
 		return StatusType::INVALID_INPUT;
 	}
-	shared_ptr<Team> team = shared_ptr<Team>(new Team(teamId, points));
 	try{
+		shared_ptr<Team> team = shared_ptr<Team>(new Team(teamId, points));
 		this->teams->insert(team, teamId);
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(const AVLTree<Team, int>::KeyAlreadyExists& e){
 		return StatusType::FAILURE;
@@ -47,6 +50,9 @@ StatusType world_cup_t::remove_team(int teamId)
 			return StatusType::FAILURE;
 		}
 		this->teams->remove(teamId);
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(const AVLTree<Team, int>::NodeNotFound& e){
 		return StatusType::FAILURE;
@@ -173,6 +179,9 @@ StatusType world_cup_t::remove_player(int playerId)
 			team->setNextKosher(nullptr);
 		}
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
 	}
@@ -239,6 +248,9 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 				newSucc->setPre(player);
 		}
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
 	}
@@ -271,6 +283,9 @@ StatusType world_cup_t::play_match(int teamId1, int teamId2)
 		team1->addGamesPlayed(1);
 		team2->addGamesPlayed(1);
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
 	}
@@ -285,6 +300,9 @@ output_t<int> world_cup_t::get_num_played_games(int playerId)
 	try {
 		return output_t<int>(this->playersById->findNode(playerId)->data->getGamesPlayed());
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(const std::exception& e) {
 		return output_t<int>(StatusType::FAILURE);
 	}
@@ -298,6 +316,9 @@ output_t<int> world_cup_t::get_team_points(int teamId)
 	}
 	try { 
 		return output_t<int>(this->teams->findNode(teamId)->data->getPoints());
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(const std::exception& e) {
 		return output_t<int>(StatusType::FAILURE);
@@ -422,6 +443,9 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
 			return output_t<int>(team->getTopScorer()->getId());
 		return output_t<int>(StatusType::FAILURE);
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(std::exception& e) {
 		return output_t<int>(StatusType::FAILURE);
 	}
@@ -438,6 +462,9 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
 	}
 	try{
 		return output_t<int>(this->teams->findNode(teamId)->data->getPlayersById()->getSize());
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(std::exception& e){
 		return output_t<int>(StatusType::FAILURE);
@@ -480,6 +507,9 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
 		treeToIdArray(tree->root, output, 0);
 		return StatusType::SUCCESS;
 	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 	catch(const std::exception& e) {
 		return StatusType::FAILURE;
 	}
@@ -515,6 +545,9 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 			closest = playerStats.getClosest(&preStats, &succStats);
 		}
 		return output_t<int>(closest);
+	}
+	catch (const std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
 	}
 	catch(const std::exception& e){
 		return output_t<int>(StatusType::FAILURE);
