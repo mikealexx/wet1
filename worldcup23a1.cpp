@@ -348,9 +348,9 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 		newTeam->addTotalCards(team1->getTotalCards() + team2->getTotalCards());
 		if(team1->getTopScorer() == nullptr){
 			newTeam->setTopScorer(team2->getTopScorer());
-		}
+		}//////////////////////////////////////////////// changed line 353 to "team1" instead of "team2"
 		else if(team2->getTopScorer() == nullptr){
-			newTeam->setTopScorer(team2->getTopScorer());
+			newTeam->setTopScorer(team1->getTopScorer());
 		}
 		else if(team1->getTopScorer()->getGoals() > team2->getTopScorer()->getGoals()) {
 			newTeam->setTopScorer(team1->getTopScorer());
